@@ -1,5 +1,7 @@
 use crate::util;
 
+use std::collections::HashSet;
+
 /* New day template
 
 fn solve_day00(file_contents: &str) -> (i32, i32) {
@@ -100,4 +102,57 @@ pub(crate) fn solve_day02_for_file(filename: &str) {
 #[test]
 fn unit_test_day02() {
     assert_eq!(solve_day02("2x3x4"), (58, 34));
+}
+
+fn solve_day03(file_contents: &str) -> (i32, i32) {
+    let lines: Vec<&str> = file_contents.split('\n').collect();
+    let line = lines.first().unwrap();
+    let mut path: HashSet<(i32, i32)> = HashSet::new();
+    let mut row = 0;
+    let mut col = 0;
+    path.insert((row, col));
+    let mut s_path: HashSet<(i32, i32)> = HashSet::new();
+    let mut s_row = 0;
+    let mut s_col = 0;
+    s_path.insert((s_row, s_col));
+    let mut rs_path: HashSet<(i32, i32)> = HashSet::new();
+    let mut rs_row = 0;
+    let mut rs_col = 0;
+    rs_path.insert((rs_row, rs_col));
+    for (ci, c) in line.chars().enumerate() {
+        let mut dr = 0;
+        let mut dc = 0;
+        match c {
+            '>' => dc = 1,
+            '<' => dc = -1,
+            '^' => dr = 1,
+            _ => dr = -1,
+        }
+        row += dr;
+        col += dc;
+        path.insert((row, col));
+        if ci % 2 == 0 {
+            s_row += dr;
+            s_col += dc;
+            s_path.insert((s_row, s_col));
+        } else {
+            rs_row += dr;
+            rs_col += dc;
+            rs_path.insert((rs_row, rs_col));
+        }
+    }
+    (path.len() as i32, s_path.union(&rs_path).count() as i32)
+}
+
+pub(crate) fn solve_day03_for_file(filename: &str) {
+    let file_contents = util::get_file_contents(filename);
+    let (ans1, ans2) = solve_day03(&file_contents);
+    println!("Day 03: {:?}, {:?}", ans1, ans2);
+}
+
+#[test]
+fn unit_test_day03() {
+    assert_eq!(solve_day03("^v"), (2, 3));
+    assert_eq!(solve_day03("^>v<"), (4, 3));
+    assert_eq!(solve_day03("^v^v^v^v^v"), (2, 11));
 }
