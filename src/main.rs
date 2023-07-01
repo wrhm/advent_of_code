@@ -1,6 +1,9 @@
-mod day_01;
 mod util;
+mod year2015;
 
+// To build iteratively on save:
+// * cargo watch -x build
+//
 // Suggested pre-commit actions:
 // * cargo build --verbose
 // * cargo clippy --all-targets -- -D warnings
@@ -9,6 +12,5 @@ mod util;
 // * cargo run
 //   * from ./ (src/)
 fn main() {
-    println!("Hello, world!");
-    day_01::solve_for_file("../data/01.txt");
+    year2015::solve_day01_for_file("../data/2015_01.txt");
 }

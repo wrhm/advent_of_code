@@ -1,6 +1,6 @@
 use crate::util;
 
-fn solve(file_contents: &str) -> (i32, i32) {
+fn solve_day01(file_contents: &str) -> (i32, i32) {
     let lines: Vec<&str> = file_contents.split('\n').collect();
     let line = lines.first().unwrap();
     let mut flr = 0;
@@ -18,15 +18,15 @@ fn solve(file_contents: &str) -> (i32, i32) {
     (flr, ind)
 }
 
-pub(crate) fn solve_for_file(filename: &str) {
+pub(crate) fn solve_day01_for_file(filename: &str) {
     let file_contents = util::get_file_contents(filename);
-    let (ans1, ans2) = solve(&file_contents);
+    let (ans1, ans2) = solve_day01(&file_contents);
     println!("Day 01: {:?}, {:?}", ans1, ans2);
 }
 
 #[test]
-fn unit_test() {
-    assert_eq!(solve("(())"), (0, -1));
-    assert_eq!(solve(")"), (-1, 1));
-    assert_eq!(solve("()())"), (-1, 5));
+fn unit_test_day01() {
+    assert_eq!(solve_day01("(())"), (0, -1));
+    assert_eq!(solve_day01(")"), (-1, 1));
+    assert_eq!(solve_day01("()())"), (-1, 5));
 }
