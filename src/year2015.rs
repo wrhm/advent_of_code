@@ -1,6 +1,5 @@
 use crate::util;
 
-use md5::compute;
 use std::collections::HashSet;
 
 /* New day template
@@ -23,6 +22,18 @@ fn unit_test_day00() {
 }
 
 */
+
+pub(crate) fn solve2015(days: Vec<i32>) {
+    for d in days {
+        match d {
+            1 => solve_day01_for_file("../data/2015/01.txt"),
+            2 => solve_day02_for_file("../data/2015/02.txt"),
+            3 => solve_day03_for_file("../data/2015/03.txt"),
+            4 => solve_day04(),
+            _ => println!("Day {} not solved yet.", d),
+        }
+    }
+}
 
 fn solve_day01(file_contents: &str) -> (i32, i32) {
     let lines: Vec<&str> = file_contents.split('\n').collect();
@@ -163,7 +174,7 @@ pub(crate) fn solve_day04() {
     let mut i = 0;
     let mut best = 0;
     let mut ans1 = 0;
-    let mut ans2;
+    let ans2;
     loop {
         let s = format!("{}{}", prefix, i);
         let b = s.as_bytes();
