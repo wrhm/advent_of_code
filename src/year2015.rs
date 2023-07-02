@@ -1,5 +1,6 @@
 use crate::util;
 
+use md5::compute;
 use std::collections::HashSet;
 
 /* New day template
@@ -155,4 +156,39 @@ fn unit_test_day03() {
     assert_eq!(solve_day03("^v"), (2, 3));
     assert_eq!(solve_day03("^>v<"), (4, 3));
     assert_eq!(solve_day03("^v^v^v^v^v"), (2, 11));
+}
+
+pub(crate) fn solve_day04() {
+    let prefix = "yzbqklnj";
+    let mut i = 0;
+    let mut best = 0;
+    let mut ans1 = 0;
+    let mut ans2;
+    loop {
+        let s = format!("{}{}", prefix, i);
+        let b = s.as_bytes();
+        let h = format!("{:?}", md5::compute(b));
+
+        let mut leading_zeros = 0;
+        for c in h.chars() {
+            if c == '0' {
+                leading_zeros += 1;
+            } else {
+                break;
+            }
+        }
+        if leading_zeros > best {
+            println!("{}, {}", i, h);
+            best = leading_zeros
+        }
+        if ans1 == 0 && best == 5 {
+            ans1 = i;
+        }
+        if best == 6 {
+            ans2 = i;
+            break;
+        }
+        i += 1;
+    }
+    println!("Day 04: {:?}, {:?}", ans1, ans2);
 }
