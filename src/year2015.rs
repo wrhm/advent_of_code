@@ -30,6 +30,7 @@ pub(crate) fn solve2015(days: Vec<i32>) {
             2 => solve_day02_for_file("../data/2015/02.txt"),
             3 => solve_day03_for_file("../data/2015/03.txt"),
             4 => solve_day04(),
+            5 => solve_day05_for_file("../data/2015/05.txt"),
             _ => println!("Day {} not solved yet.", d),
         }
     }
@@ -202,4 +203,109 @@ pub(crate) fn solve_day04() {
         i += 1;
     }
     println!("Day 04: {:?}, {:?}", ans1, ans2);
+}
+
+fn contains_three_vowels(s: &str) -> bool {
+    let mut vowels: HashSet<char> = HashSet::new();
+    for v in "aeiou".chars() {
+        vowels.insert(v);
+    }
+    let mut n = 0;
+    for c in s.chars() {
+        if vowels.contains(&c) {
+            n += 1;
+        }
+    }
+    n >= 3
+}
+
+fn contains_adjacent_repeat(s: &str) -> bool {
+    let mut prev: char = '?';
+    for (i, c) in s.chars().enumerate() {
+        if i > 0 && c == prev {
+            return true;
+        }
+        prev = c;
+    }
+    false
+}
+
+fn contains_bad_pair(s: &str) -> bool {
+    let mut prev: char;
+    let mut curr: char = '?';
+    for c in s.chars() {
+        prev = curr;
+        curr = c;
+        match (prev, curr) {
+            ('a', 'b') => return true,
+            ('c', 'd') => return true,
+            ('p', 'q') => return true,
+            ('x', 'y') => return true,
+            _ => (),
+        }
+    }
+    false
+}
+
+fn is_nice_string_v1(s: &str) -> bool {
+    contains_three_vowels(s) && contains_adjacent_repeat(s) && !contains_bad_pair(s)
+}
+
+fn has_repeated_pair(s: &str) -> bool {
+    for i in 0..s.len() - 3 {
+        for j in (i + 2)..s.len() - 1 {
+            if s.chars().nth(i) == s.chars().nth(j) && s.chars().nth(i + 1) == s.chars().nth(j + 1)
+            {
+                return true;
+            }
+        }
+    }
+    false
+}
+
+fn has_sandwich(s: &str) -> bool {
+    for i in 0..s.len() - 2 {
+        if s.chars().nth(i) == s.chars().nth(i + 2) {
+            return true;
+        }
+    }
+    false
+}
+
+fn is_nice_string_v2(s: &str) -> bool {
+    has_repeated_pair(s) && has_sandwich(s)
+}
+
+fn solve_day05(file_contents: &str) -> (i32, i32) {
+    let lines: Vec<&str> = file_contents.split('\n').collect();
+    let mut ans1 = 0;
+    let mut ans2 = 0;
+    for line in lines {
+        if line.is_empty() {
+            continue;
+        }
+        if is_nice_string_v1(line) {
+            ans1 += 1;
+        }
+        if is_nice_string_v2(line) {
+            ans2 += 1;
+        }
+    }
+    (ans1, ans2)
+}
+
+pub(crate) fn solve_day05_for_file(filename: &str) {
+    let file_contents = util::get_file_contents(filename);
+    let (ans1, ans2) = solve_day05(&file_contents);
+    println!("Day 05: {:?}, {:?}", ans1, ans2);
+}
+
+#[test]
+fn unit_test_day05() {
+    assert!(!has_repeated_pair("aaa"));
+    assert!(!has_repeated_pair("aabb"));
+    assert!(has_repeated_pair("abab"));
+    assert_eq!(solve_day05("ugknbfddgicrmopn").0, 1);
+    assert_eq!(solve_day05("jchzalrnumimnmhp").0, 0);
+    assert_eq!(solve_day05("qjhvhtzxzqqjkmpb").1, 1);
 }

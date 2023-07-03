@@ -13,5 +13,8 @@ mod year2015;
 //   * from ./ (src/)
 fn main() {
     // Day 4 involves md5 hashing and is very slow.
-    year2015::solve2015(vec![1, 2, 3]);
+    let mut days = vec![1, 2, 3];
+    let mut later_days: Vec<i32> = (5..26).collect();
+    days.append(&mut later_days);
+    year2015::solve2015(days);
 }
