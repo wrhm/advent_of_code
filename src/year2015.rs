@@ -1,5 +1,8 @@
 use crate::util;
 
+use regex::Regex;
+use std::cmp::max;
+use std::cmp::min;
 use std::collections::HashSet;
 
 /* New day template
@@ -18,7 +21,7 @@ pub(crate) fn solve_day00_for_file(filename: &str) {
 
 #[test]
 fn unit_test_day00() {
-    assert_eq!(solve_day00(""), (0, 0));
+    assert_eq!(solve_day00(""), (-1, -1));
 }
 
 */
@@ -31,6 +34,7 @@ pub(crate) fn solve2015(days: Vec<i32>) {
             3 => solve_day03_for_file("../data/2015/03.txt"),
             4 => solve_day04(),
             5 => solve_day05_for_file("../data/2015/05.txt"),
+            6 => solve_day06_for_file("../data/2015/06.txt"),
             _ => println!("Day {} not solved yet.", d),
         }
     }
@@ -95,10 +99,10 @@ fn solve_day02(file_contents: &str) -> (i32, i32) {
         let w = dims[1];
         let h = dims[2];
         let area = 2 * (l * w + l * h + w * h);
-        let slack = std::cmp::min(l * w, std::cmp::min(l * h, w * h));
+        let slack = min(l * w, min(l * h, w * h));
         total_area += area + slack;
 
-        let ribbon = std::cmp::min(2 * (l + w), std::cmp::min(2 * (l + h), 2 * (w + h)));
+        let ribbon = min(2 * (l + w), min(2 * (l + h), 2 * (w + h)));
         let bow = l * w * h;
         total_ribbon += ribbon + bow;
         // println!("{:?}", dims[0]);
@@ -308,4 +312,121 @@ fn unit_test_day05() {
     assert_eq!(solve_day05("ugknbfddgicrmopn").0, 1);
     assert_eq!(solve_day05("jchzalrnumimnmhp").0, 0);
     assert_eq!(solve_day05("qjhvhtzxzqqjkmpb").1, 1);
+}
+
+/*
+For example:
+
+turn on 0,0 through 999,999 would turn on (or leave on) every light.
+toggle 0,0 through 999,0 would toggle the first line of 1000 lights, turning off the ones that were on, and turning on the ones that were off.
+turn off 499,499 through 500,500 would turn off (or leave off) the middle four lights.
+After following the instructions, how many lights are lit?
+ */
+
+/*
+You just finish implementing your winning light pattern when you realize you mistranslated Santa's message from Ancient Nordic Elvish.
+
+The light grid you bought actually has individual brightness controls; each light can have a brightness of zero or more. The lights all start at zero.
+
+The phrase turn on actually means that you should increase the brightness of those lights by 1.
+
+The phrase turn off actually means that you should decrease the brightness of those lights by 1, to a minimum of zero.
+
+The phrase toggle actually means that you should increase the brightness of those lights by 2.
+
+What is the total brightness of all lights combined after following Santa's instructions?
+
+For example:
+
+turn on 0,0 through 0,0 would increase the total brightness by 1.
+toggle 0,0 through 999,999 would increase the total brightness by 2000000.
+ */
+
+fn solve_day06(file_contents: &str) -> (i32, i32) {
+    let lines: Vec<&str> = file_contents.split('\n').collect();
+
+    let mut lights: Vec<Vec<bool>> = vec![vec![false; 1000]; 1000];
+    let mut brightness: Vec<Vec<i32>> = vec![vec![0; 1000]; 1000];
+
+    for line in lines {
+        if line.is_empty() {
+            continue;
+        }
+        let words: Vec<&str> = line.split_whitespace().collect();
+        let mut turn_off = false;
+        let mut turn_on = false;
+        match (words[0], words[1]) {
+            ("turn", "off") => turn_off = true,
+            ("turn", "on") => turn_on = true,
+            ("toggle", _) => (),
+            (_, _) => panic!(),
+        }
+        let re = Regex::new(r"\d+").unwrap();
+        let nums = re
+            .find_iter(line)
+            .map(|m| m.as_str().parse::<i32>().unwrap())
+            .collect::<Vec<i32>>();
+        let [r1, c1, r2, c2] = nums[..] else {panic!()};
+        let rlo = min(r1, r2);
+        let rhi = max(r1, r2);
+        let clo = min(c1, c2);
+        let chi = max(c1, c2);
+        for r in rlo..rhi + 1 {
+            for c in clo..chi + 1 {
+                let old_val = lights[r as usize][c as usize];
+                let old_brightness = brightness[r as usize][c as usize];
+                let new_val: bool;
+                let new_brightness: i32;
+                //                 The phrase turn on actually means that you should increase the brightness of those lights by 1.
+
+                // The phrase turn off actually means that you should decrease the brightness of those lights by 1, to a minimum of zero.
+
+                // The phrase toggle actually means that you should increase the brightness of those lights by 2.
+                if turn_off {
+                    new_val = false;
+                    new_brightness = max(old_brightness - 1, 0);
+                } else if turn_on {
+                    new_val = true;
+                    new_brightness = old_brightness + 1;
+                } else {
+                    new_val = !old_val;
+                    new_brightness = old_brightness + 2;
+                }
+                lights[r as usize][c as usize] = new_val;
+                brightness[r as usize][c as usize] = new_brightness;
+            }
+        }
+    }
+    let ans1 = lights
+        .iter()
+        .map(|row| row.iter().filter(|&&x| x).count())
+        .reduce(|acc, e| acc + e)
+        .unwrap();
+
+    let ans2: i32 = brightness.iter().map(|x| x.iter().sum::<i32>()).sum();
+    (ans1 as i32, ans2)
+}
+
+pub(crate) fn solve_day06_for_file(filename: &str) {
+    let file_contents = util::get_file_contents(filename);
+    let (ans1, ans2) = solve_day06(&file_contents);
+    println!("Day 06: {:?}, {:?}", ans1, ans2);
+}
+
+#[test]
+fn unit_test_day06() {
+    assert_eq!(solve_day06("toggle 0,0 through 999,999").0, 1_000_000);
+    assert_eq!(solve_day06("toggle 0,0 through 999,0").0, 1000);
+    assert_eq!(solve_day06("turn on 0,0 through 9,9").0, 100);
+    assert_eq!(
+        solve_day06("turn on 0,0 through 9,9\nturn off 0,0 through 0,3").0,
+        96
+    );
+    assert_eq!(
+        solve_day06("turn on 0,0 through 9,9\nturn off 0,0 through 0,3\ntoggle 9,0 through 9,5").0,
+        90
+    );
+    assert_eq!(solve_day06("turn on 499,499 through 500,501").0, 6);
+    assert_eq!(solve_day06("turn on 0,0 through 0,0").1, 1);
+    assert_eq!(solve_day06("toggle 0,0 through 999,999").1, 2_000_000);
 }

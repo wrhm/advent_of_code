@@ -1,8 +1,11 @@
 mod util;
 mod year2015;
 
-// To build iteratively on save:
+// For updates on save:
 // * cargo watch -x build
+// * cargo watch -x test
+// * cargo watch -x "test -- --nocapture"
+//
 //
 // Suggested pre-commit actions:
 // * cargo build --verbose
