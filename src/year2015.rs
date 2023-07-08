@@ -1,5 +1,6 @@
 use crate::util;
 
+use itertools::Itertools;
 use regex::Regex;
 use std::cmp::max;
 use std::cmp::min;
@@ -44,6 +45,7 @@ pub(crate) fn solve2015(days: Vec<i32>) {
             6 => solve_day06_for_file("../data/2015/06.txt"),
             7 => solve_day07_for_file("../data/2015/07.txt"),
             8 => solve_day08_for_file("../data/2015/08.txt"),
+            9 => solve_day09_for_file("../data/2015/09.txt"),
             _ => println!("Day {} not solved yet.", d),
         }
     }
@@ -637,5 +639,62 @@ fn unit_test_day08() {
             .map(|x| calculate_reverse_escapes(x))
             .collect::<Vec<i32>>(),
         vec![4, 4, 6, 5]
+    );
+}
+
+fn solve_day09(file_contents: &str) -> (i32, i32) {
+    let lines: Vec<&str> = file_contents.split('\n').collect();
+    let mut hs: HashSet<&str> = HashSet::new();
+    let mut hm: HashMap<(&str, &str), i32> = HashMap::new();
+    for line in lines {
+        if line.is_empty() {
+            continue;
+        }
+        let words: Vec<&str> = line.split_whitespace().collect();
+        let cfrom = min(words[0], words[2]);
+        let cto = max(words[0], words[2]);
+        let dist = words[4].parse::<i32>().unwrap();
+        hm.insert((cfrom, cto), dist);
+        hs.insert(cfrom);
+        hs.insert(cto);
+    }
+    let cities = hs.iter().collect::<Vec<&&str>>();
+    let ncities = cities.len();
+    let perms = (0..ncities).permutations(ncities);
+    let mut shortest = 0;
+    let mut longest = 0;
+    for perm in perms {
+        let ordering = perm.iter().map(|i| *cities[*i]).collect::<Vec<&str>>();
+        let mut dist = 0;
+        for i in 0..(ncities - 1) {
+            let cfrom = ordering[i];
+            let cto = ordering[i + 1];
+            dist += hm.get(&(min(cfrom, cto), max(cfrom, cto))).unwrap();
+        }
+        if shortest == 0 || dist < shortest {
+            shortest = dist;
+        }
+        if longest == 0 || dist > longest {
+            longest = dist;
+        }
+    }
+    (shortest, longest)
+}
+
+pub(crate) fn solve_day09_for_file(filename: &str) {
+    let file_contents = util::get_file_contents(filename);
+    let (ans1, ans2) = solve_day09(&file_contents);
+    println!("Day 09: {:?}, {:?}", ans1, ans2);
+}
+
+#[test]
+fn unit_test_day09() {
+    assert_eq!(
+        solve_day09(
+            "London to Dublin = 464
+    London to Belfast = 518
+    Dublin to Belfast = 141"
+        ),
+        (605, 982)
     );
 }
