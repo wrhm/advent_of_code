@@ -3,7 +3,9 @@ use crate::util;
 use regex::Regex;
 use std::cmp::max;
 use std::cmp::min;
+use std::collections::HashMap;
 use std::collections::HashSet;
+use topological_sort::TopologicalSort;
 
 /* New day template
 
@@ -35,6 +37,7 @@ pub(crate) fn solve2015(days: Vec<i32>) {
             4 => solve_day04(),
             5 => solve_day05_for_file("../data/2015/05.txt"),
             6 => solve_day06_for_file("../data/2015/06.txt"),
+            7 => solve_day07_for_file("../data/2015/07.txt"),
             _ => println!("Day {} not solved yet.", d),
         }
     }
@@ -105,7 +108,6 @@ fn solve_day02(file_contents: &str) -> (i32, i32) {
         let ribbon = min(2 * (l + w), min(2 * (l + h), 2 * (w + h)));
         let bow = l * w * h;
         total_ribbon += ribbon + bow;
-        // println!("{:?}", dims[0]);
     }
     (total_area, total_ribbon)
 }
@@ -194,7 +196,6 @@ pub(crate) fn solve_day04() {
             }
         }
         if leading_zeros > best {
-            println!("{}, {}", i, h);
             best = leading_zeros
         }
         if ans1 == 0 && best == 5 {
@@ -429,4 +430,118 @@ fn unit_test_day06() {
     assert_eq!(solve_day06("turn on 499,499 through 500,501").0, 6);
     assert_eq!(solve_day06("turn on 0,0 through 0,0").1, 1);
     assert_eq!(solve_day06("toggle 0,0 through 999,999").1, 2_000_000);
+}
+
+// 123 -> x             [0]
+// 456 -> y             [1]
+// x AND y -> d         [2]
+// x OR y -> e          [3]
+// x LSHIFT 2 -> f      [4]
+// y RSHIFT 2 -> g      [5]
+// NOT x -> h           [6]
+// NOT y -> i           [7]
+/*
+2 requires 0 and 1
+3 requires 0 and 1
+4 requires 0
+5 requires 1
+6 requires 0
+7 requires 1
+*/
+fn simulate_wires(lines: &Vec<&str>, var: &str) -> i32 {
+    // Stores variables values once they are known.
+    let mut hm_var: HashMap<&str, u16> = HashMap::new();
+    // Tracks variables' dependencies on other values.
+    let mut ts = TopologicalSort::<&str>::new();
+    // Tracks the needed inputs and operators from expressions.
+    // (outname, (var/op, var/op, var/op))
+    let mut hm_deps: HashMap<&str, (&str, &str, &str)> = HashMap::new();
+    for line in lines {
+        if line.is_empty() {
+            continue;
+        }
+        let words: Vec<&str> = line.split_whitespace().collect();
+        if words.len() == 3 {
+            // x -> y
+            let inname = words[0];
+            let outname = words[2];
+            ts.insert(outname);
+            ts.add_dependency(inname, outname);
+            hm_deps.insert(outname, (inname, "", ""));
+        } else if words.len() == 4 {
+            // NOT x -> y
+            let inname = words[1];
+            let outname = words[3];
+            ts.add_dependency(inname, outname);
+            hm_deps.insert(outname, ("NOT", inname, ""));
+        } else {
+            // x (AND / OR / LSHIFT / RSHIFT) y -> z
+            let inname0 = words[0];
+            let opname = words[1];
+            let inname1 = words[2];
+            let outname = words[4];
+            ts.add_dependency(inname0, outname);
+            ts.add_dependency(inname1, outname);
+            hm_deps.insert(outname, (inname0, opname, inname1));
+        }
+    }
+    while !ts.is_empty() {
+        let elt = ts.pop().unwrap();
+        match hm_deps.get(elt) {
+            Some((x, y, z)) => {
+                let result: u16 = match (x, y, z) {
+                    (_, &"", &"") => *hm_var.get(x).unwrap(),
+                    (&"NOT", _, _) => !hm_var.get(y).unwrap(),
+                    (_, &"AND", _) => hm_var.get(x).unwrap() & hm_var.get(z).unwrap(),
+                    (_, &"OR", _) => hm_var.get(x).unwrap() | hm_var.get(z).unwrap(),
+                    (_, &"LSHIFT", _) => hm_var.get(x).unwrap() << hm_var.get(z).unwrap(),
+                    (_, &"RSHIFT", _) => hm_var.get(x).unwrap() >> hm_var.get(z).unwrap(),
+                    _ => panic!(),
+                };
+                hm_var.insert(elt, result);
+            }
+            None => {
+                hm_var.insert(elt, elt.parse::<u16>().unwrap());
+            }
+        }
+    }
+    *hm_var.get(var).unwrap() as i32
+}
+
+fn solve_day07(file_contents: &str, var: &str) -> (i32, i32) {
+    let mut lines: Vec<&str> = file_contents.split('\n').collect();
+    let ans1 = simulate_wires(&lines, var);
+    let new_rule = format!("{} -> b", ans1);
+    lines.push(&new_rule);
+    let ans2 = simulate_wires(&lines, var);
+    (ans1, ans2)
+}
+
+pub(crate) fn solve_day07_for_file(filename: &str) {
+    let file_contents = util::get_file_contents(filename);
+    let (ans1, ans2) = solve_day07(&file_contents, "a");
+    println!("Day 07: {:?}, {:?}", ans1, ans2);
+}
+
+#[test]
+fn unit_test_day07() {
+    assert_eq!(
+        vec!["d", "e", "h", "i"]
+            .iter()
+            .map(|v| solve_day07(
+                "123 -> x
+456 -> y
+y -> a
+x AND y -> d
+x OR y -> e
+x LSHIFT 2 -> f
+y RSHIFT 2 -> g
+NOT x -> h
+NOT y -> i",
+                v
+            )
+            .0)
+            .collect::<Vec<i32>>(),
+        [72, 507, 65412, 65079]
+    );
 }
