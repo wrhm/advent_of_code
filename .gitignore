@@ -1,4 +1,3 @@
 /target
 /data
 Cargo.lock
-src/day_00.rs

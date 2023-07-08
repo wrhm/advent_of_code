@@ -12,6 +12,11 @@ use topological_sort::TopologicalSort;
 fn solve_day00(file_contents: &str) -> (i32, i32) {
     let lines: Vec<&str> = file_contents.split('\n').collect();
     let line = lines.first().unwrap();
+    for line in lines {
+        if line.is_empty() {
+            continue;
+        }
+    }
     (0, 0)
 }
 
@@ -38,6 +43,7 @@ pub(crate) fn solve2015(days: Vec<i32>) {
             5 => solve_day05_for_file("../data/2015/05.txt"),
             6 => solve_day06_for_file("../data/2015/06.txt"),
             7 => solve_day07_for_file("../data/2015/07.txt"),
+            8 => solve_day08_for_file("../data/2015/08.txt"),
             _ => println!("Day {} not solved yet.", d),
         }
     }
@@ -543,5 +549,93 @@ NOT y -> i",
             .0)
             .collect::<Vec<i32>>(),
         [72, 507, 65412, 65079]
+    );
+}
+
+fn calculate_escapes(line: &str) -> i32 {
+    let chars_literal: Vec<char> = line.chars().collect();
+    let mut backslash = 0;
+    let mut hex = 0;
+    let mut quot = 0;
+    let mut i: usize = 0;
+    while i < chars_literal.len() {
+        if chars_literal[i] == '\\' {
+            match chars_literal[i + 1] {
+                '\\' => {
+                    backslash += 1;
+                    i += 1;
+                }
+                'x' => {
+                    hex += 1;
+                    i += 3;
+                }
+                '"' => {
+                    quot += 1;
+                    i += 1;
+                }
+                _ => (),
+            }
+        }
+        i += 1;
+    }
+    2 + backslash + hex * 3 + quot
+}
+
+fn calculate_reverse_escapes(line: &str) -> i32 {
+    let chars_literal: Vec<char> = line.chars().collect();
+    let mut i: usize = 0;
+    let mut extras = 2;
+    while i < chars_literal.len() {
+        match chars_literal[i] {
+            '\\' => extras += 1,
+            '"' => extras += 1,
+            _ => (),
+        }
+        i += 1;
+    }
+    extras
+}
+
+fn solve_day08(file_contents: &str) -> (i32, i32) {
+    let lines: Vec<&str> = file_contents.split('\n').collect();
+    let mut ans1 = 0;
+    let mut ans2 = 0;
+    for line in lines {
+        if line.is_empty() {
+            continue;
+        }
+        let escapes = calculate_escapes(line);
+        ans1 += escapes;
+        let reverse_escapes = calculate_reverse_escapes(line);
+        ans2 += reverse_escapes;
+    }
+    (ans1, ans2)
+}
+
+pub(crate) fn solve_day08_for_file(filename: &str) {
+    let file_contents = util::get_file_contents(filename);
+    let (ans1, ans2) = solve_day08(&file_contents);
+    println!("Day 08: {:?}, {:?}", ans1, ans2);
+}
+
+#[test]
+fn unit_test_day08() {
+    assert_eq!(
+        util::get_file_contents("./test_data/2015/08.txt")
+            .split('\n')
+            .collect::<Vec<&str>>()
+            .iter()
+            .map(|x| calculate_escapes(x))
+            .collect::<Vec<i32>>(),
+        vec![2, 2, 3, 5]
+    );
+    assert_eq!(
+        util::get_file_contents("./test_data/2015/08.txt")
+            .split('\n')
+            .collect::<Vec<&str>>()
+            .iter()
+            .map(|x| calculate_reverse_escapes(x))
+            .collect::<Vec<i32>>(),
+        vec![4, 4, 6, 5]
     );
 }
