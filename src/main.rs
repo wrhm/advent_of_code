@@ -19,6 +19,5 @@ fn main() {
     let mut days = vec![1, 2, 3];
     let mut later_days: Vec<i32> = (5..26).collect();
     days.append(&mut later_days);
-    days = vec![9];
     year2015::solve2015(days);
 }

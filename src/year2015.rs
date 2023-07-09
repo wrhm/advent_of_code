@@ -1,6 +1,7 @@
 use crate::util;
 
 use itertools::Itertools;
+use itertools::PeekingNext;
 use regex::Regex;
 use std::cmp::max;
 use std::cmp::min;
@@ -46,6 +47,7 @@ pub(crate) fn solve2015(days: Vec<i32>) {
             7 => solve_day07_for_file("../data/2015/07.txt"),
             8 => solve_day08_for_file("../data/2015/08.txt"),
             9 => solve_day09_for_file("../data/2015/09.txt"),
+            10 => solve_day10(),
             _ => println!("Day {} not solved yet.", d),
         }
     }
@@ -697,4 +699,47 @@ fn unit_test_day09() {
         ),
         (605, 982)
     );
+}
+
+fn look_and_say(n: i32) -> (i32, i32) {
+    let mut v = vec![1, 3, 2, 1, 1, 3, 1, 1, 1, 2];
+    let mut w: Vec<i32>;
+    let mut ans1 = 0;
+    let mut ans2 = 0;
+    for j in 0..n {
+        w = vec![];
+        let mut i = 0;
+        let nv = v.len();
+        while i < nv {
+            if i + 2 < nv && v[i] == v[i + 1] && v[i] == v[i + 2] {
+                w.push(3);
+                w.push(v[i]);
+                i += 3;
+            } else if i + 1 < nv && v[i] == v[i + 1] {
+                w.push(2);
+                w.push(v[i]);
+                i += 2;
+            } else {
+                w.push(1);
+                w.push(v[i]);
+                i += 1;
+            }
+        }
+        v.clear();
+        for x in w {
+            v.push(x);
+        }
+        if j + 1 == 40 {
+            ans1 = v.len() as i32
+        }
+        if j + 1 == 50 {
+            ans2 = v.len() as i32
+        }
+    }
+    (ans1, ans2)
+}
+
+fn solve_day10() {
+    let (ans1, ans2) = look_and_say(50);
+    println!("Day 10: {:?}, {:?}", ans1, ans2);
 }
