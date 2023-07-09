@@ -1,7 +1,6 @@
 use crate::util;
 
 use itertools::Itertools;
-use itertools::PeekingNext;
 use regex::Regex;
 use std::cmp::max;
 use std::cmp::min;
@@ -48,6 +47,7 @@ pub(crate) fn solve2015(days: Vec<i32>) {
             8 => solve_day08_for_file("../data/2015/08.txt"),
             9 => solve_day09_for_file("../data/2015/09.txt"),
             10 => solve_day10(),
+            11 => solve_day11(),
             _ => println!("Day {} not solved yet.", d),
         }
     }
@@ -742,4 +742,95 @@ fn look_and_say(n: i32) -> (i32, i32) {
 fn solve_day10() {
     let (ans1, ans2) = look_and_say(50);
     println!("Day 10: {:?}, {:?}", ans1, ans2);
+}
+
+fn do_carry(vals: &mut Vec<u8>, modulus: u8, position: usize) {
+    let v = vals[position];
+    if v >= modulus && position > 0 {
+        vals[position - 1] += 1;
+    }
+    vals[position] %= modulus;
+    if position > 0 {
+        do_carry(vals, modulus, position - 1);
+    }
+}
+
+fn has_incr_run_of_three(s: &Vec<u8>) -> bool {
+    let n = s.len();
+    for i in 0..n - 2 {
+        if s[i + 1] > s[i]
+            && s[i + 1] - s[i] == 1
+            && s[i + 2] > s[i + 1]
+            && s[i + 2] - s[i + 1] == 1
+        {
+            return true;
+        }
+    }
+    false
+}
+
+fn has_bad_letters(s: &Vec<u8>) -> bool {
+    let i = b'i' - b'a';
+    let o = b'o' - b'a';
+    let l = b'l' - b'a';
+    for &x in s {
+        if x == i || x == o || x == l {
+            return true;
+        }
+    }
+    false
+}
+
+fn has_two_pairs(s: &Vec<u8>) -> bool {
+    let n = s.len();
+    for i in 0..n - 2 {
+        if s[i] != s[i + 1] {
+            continue;
+        }
+        for j in (i + 2)..n - 1 {
+            if s[j] == s[i] {
+                continue;
+            }
+            if s[j] == s[j + 1] {
+                return true;
+            }
+        }
+    }
+    false
+}
+
+fn next_valid_str(input: &str) -> String {
+    let mut ascii: Vec<u8> = input.chars().map(|c| (c as u8) - b'a').collect_vec();
+    let nc = ascii.len();
+    loop {
+        if has_incr_run_of_three(&ascii) && !has_bad_letters(&ascii) && has_two_pairs(&ascii) {
+            break;
+        }
+        ascii[nc - 1] += 1;
+        do_carry(&mut ascii, 26, nc - 1);
+    }
+    ascii.iter().map(|x| (x + b'a') as char).collect()
+}
+
+pub(crate) fn solve_day11() {
+    let ans1 = next_valid_str("vzbxkghb");
+    let mut ascii: Vec<u8> = ans1.chars().map(|c| (c as u8) - b'a').collect_vec();
+    let nc = ascii.len();
+    ascii[nc - 1] += 1;
+    do_carry(&mut ascii, 26, nc - 1);
+    let new_start: String = ascii.iter().map(|x| (x + b'a') as char).collect();
+    let ans2 = next_valid_str(&new_start);
+    println!("Day 11: {:?}, {:?}", ans1, ans2);
+}
+
+#[test]
+fn unit_test_day11() {
+    assert!(has_incr_run_of_three(&vec![2, 4, 5, 6]));
+    assert!(!has_incr_run_of_three(&vec![2, 5, 6]));
+    assert!(has_bad_letters(&vec![8]));
+    assert!(!has_bad_letters(&vec![9]));
+    assert!(has_two_pairs(&vec![0, 0, 1, 1]));
+    assert!(has_two_pairs(&vec![0, 0, 2, 1, 1]));
+    assert!(!has_two_pairs(&vec![0, 0, 0, 0]));
+    assert_eq!(&next_valid_str("abcdefgh"), "abcdffaa");
 }
