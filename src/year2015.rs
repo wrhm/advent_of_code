@@ -48,6 +48,7 @@ pub(crate) fn solve2015(days: Vec<i32>) {
             9 => solve_day09_for_file("../data/2015/09.txt"),
             10 => solve_day10(),
             11 => solve_day11(),
+            12 => solve_day12_for_file("../data/2015/12.txt"),
             _ => println!("Day {} not solved yet.", d),
         }
     }
@@ -833,4 +834,50 @@ fn unit_test_day11() {
     assert!(has_two_pairs(&vec![0, 0, 2, 1, 1]));
     assert!(!has_two_pairs(&vec![0, 0, 0, 0]));
     assert_eq!(&next_valid_str("abcdefgh"), "abcdffaa");
+}
+
+fn sum_ignoring_reds(json: &serde_json::Value) -> i64 {
+    if json.is_array() {
+        let mut total: i64 = 0;
+        for v in json.as_array().unwrap() {
+            total += sum_ignoring_reds(v);
+        }
+        total
+    } else if json.is_object() {
+        for (_, v) in json.as_object().unwrap() {
+            if v.is_string() && v.as_str().unwrap() == "red" {
+                return 0;
+            }
+        }
+        let mut total: i64 = 0;
+        for (_, v) in json.as_object().unwrap() {
+            total += sum_ignoring_reds(v);
+        }
+        return total;
+    } else if json.is_i64() {
+        return json.as_i64().unwrap();
+    } else {
+        return 0;
+    }
+}
+
+fn solve_day12(file_contents: &str) -> (i32, i32) {
+    let lines: Vec<&str> = file_contents.split('\n').collect();
+    let line = lines.first().unwrap();
+    let re = Regex::new(r"\-?\d+").unwrap();
+    let nums = re
+        .find_iter(line)
+        .map(|m| m.as_str().parse::<i32>().unwrap())
+        .collect::<Vec<i32>>();
+    let ans1: i32 = nums.iter().sum();
+
+    let v: serde_json::Value = serde_json::from_str(line).unwrap();
+    let ans2: i64 = sum_ignoring_reds(&v);
+    (ans1, ans2 as i32)
+}
+
+pub(crate) fn solve_day12_for_file(filename: &str) {
+    let file_contents = util::get_file_contents(filename);
+    let (ans1, ans2) = solve_day12(&file_contents);
+    println!("Day 12: {:?}, {:?}", ans1, ans2);
 }
