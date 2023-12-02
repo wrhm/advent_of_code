@@ -1,1 +1,5 @@
+# input files
 *.txt
+
+# OCaml generated files
+*_build*

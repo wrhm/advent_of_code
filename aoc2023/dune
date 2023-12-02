@@ -1,0 +1,7 @@
+; (executable
+;  (name aoc))
+
+(executable
+ (public_name aoc)
+ (name aoc)
+ (libraries base stdio))
