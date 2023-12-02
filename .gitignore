@@ -3,3 +3,5 @@
 
 # OCaml generated files
 *_build*
+
+*pycache*
