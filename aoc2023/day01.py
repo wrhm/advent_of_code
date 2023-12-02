@@ -1,17 +1,9 @@
 # day01.py
 
 import re
+import util
 
-# To import ../util.py
-if True:
-    import sys
-    import os
-    current = os.path.dirname(os.path.realpath(__file__))
-    parent = os.path.dirname(current)
-    sys.path.append(parent)
-    import util
-
-lines = util.file_as_lines('a.txt')
+lines = util.file_as_lines('01/a.txt')
 
 
 def is_digit(c):
