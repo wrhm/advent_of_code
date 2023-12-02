@@ -11,7 +11,7 @@ Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green'''.split('\n')
 
 
-def is_possible(line):
+def gn_rgb(line):
     [lhs, rhs] = line.split(':')
     gn = lhs.split(' ')[1]
     grabs = rhs.split(';')
@@ -21,26 +21,23 @@ def is_possible(line):
         for [v, k] in vks:
             d[k] = max(d[k], int(v))
     r, g, b = d['red'], d['green'], d['blue']
+    return (gn, r, g, b)
+
+
+def is_possible(line):
+    (gn, r, g, b) = gn_rgb(line)
     possible = r <= 12 and g <= 13 and b <= 14
     return int(gn) if possible else 0
 
 
-# print(sum([is_possible(line) for line in example]))
-print(sum([is_possible(line) for line in lines]))
+print('ex1', sum([is_possible(line) for line in example]))
+print('part1', sum([is_possible(line) for line in lines]))
 
 
 def find_power(line):
-    [lhs, rhs] = line.split(':')
-    gn = lhs.split(' ')[1]
-    grabs = rhs.split(';')
-    d = {'red': 0, 'green': 0, 'blue': 0}
-    for pg in grabs:
-        vks = [x.split() for x in pg.split(',')]
-        for [v, k] in vks:
-            d[k] = max(d[k], int(v))
-    r, g, b = d['red'], d['green'], d['blue']
+    (gn, r, g, b) = gn_rgb(line)
     return r*g*b
 
 
-# print(sum([find_power(line) for line in example]))
-print(sum([find_power(line) for line in lines]))
+print('ex2', sum([find_power(line) for line in example]))
+print('part2', sum([find_power(line) for line in lines]))
