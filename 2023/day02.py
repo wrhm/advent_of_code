@@ -1,8 +1,13 @@
 # day02.py
 
-import util
+import sys
+import os
+parent_dir = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(parent_dir)
+sys.path.append(parent_dir+'/..')
+import common.shared_utils as su
 
-lines = util.file_as_lines('inputs/02/a.txt')
+lines = su.file_as_lines('inputs/02/a.txt')
 
 example = '''Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
 Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue

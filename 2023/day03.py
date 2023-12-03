@@ -1,8 +1,13 @@
 # day03.py
 
-import util
+import sys
+import os
+parent_dir = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(parent_dir)
+sys.path.append(parent_dir+'/..')
+import common.shared_utils as su
 
-lines = util.file_as_lines('inputs/03/a.txt')
+lines = su.file_as_lines('inputs/03/a.txt')
 
 example = '''467..114..
 ...*......
@@ -34,7 +39,7 @@ def locate_parts_and_symbols(grid):
     for r in range(h):
         for c in range(w):
             ch = grid[r][c]
-            if util.is_digit(ch):
+            if su.is_digit(ch):
                 if start_r == -1:
                     start_r, start_c = r, c
                 val = 10*val + int(ch)

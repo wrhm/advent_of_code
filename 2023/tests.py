@@ -1,14 +1,14 @@
-import day00
-import day01
-import day02
-import day03
-
 import sys
 import os
 parent_dir = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(parent_dir)
 sys.path.append(parent_dir+'/..')
 import common.shared_utils as su
+
+import day00
+import day01
+import day02
+import day03
 
 
 assert day00.solve_pt1(day00.example) == ''

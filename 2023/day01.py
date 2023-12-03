@@ -1,9 +1,16 @@
 # day01.py
 
+import sys
+import os
+parent_dir = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(parent_dir)
+sys.path.append(parent_dir+'/..')
+import common.shared_utils as su
+
 import re
 import util
 
-lines = util.file_as_lines('inputs/01/a.txt')
+lines = su.file_as_lines('inputs/01/a.txt')
 
 example1 = '''1abc2
 pqr3stu8vwx
@@ -20,7 +27,7 @@ zoneight234
 
 
 def digits(s):
-    return [int(c) for c in s if util.is_digit(c)]
+    return [int(c) for c in s if su.is_digit(c)]
 
 
 def calibration(s):
