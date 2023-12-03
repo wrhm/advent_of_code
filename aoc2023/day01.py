@@ -3,15 +3,11 @@
 import re
 import util
 
-lines = util.file_as_lines('01/a.txt')
-
-
-def is_digit(c):
-    return '0' <= c <= '9'
+lines = util.file_as_lines('inputs/01/a.txt')
 
 
 def digits(s):
-    return [int(c) for c in s if is_digit(c)]
+    return [int(c) for c in s if util.is_digit(c)]
 
 
 def calibration(s):

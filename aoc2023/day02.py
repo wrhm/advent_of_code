@@ -2,7 +2,7 @@
 
 import util
 
-lines = util.file_as_lines('02/a.txt')
+lines = util.file_as_lines('inputs/02/a.txt')
 
 example = '''Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
 Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
