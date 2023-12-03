@@ -64,10 +64,6 @@ def solve_pt2(data):
 
 
 if __name__ == '__main__':
-    # print(solve_pt1(example1))
-    # print(solve_pt1(lines))
-    # print(solve_pt2(example2))
-    # print(solve_pt2(lines))
     print('ex1', solve_pt1(example1))
     print('part1', solve_pt1(lines))
     print('ex2', solve_pt2(example2))

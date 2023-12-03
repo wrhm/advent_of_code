@@ -108,6 +108,5 @@ def solve_pt2(grid):
 if __name__ == '__main__':
     print('ex1', solve_pt1(example))
     print('part1', solve_pt1(lines))
-
     print('ex2', solve_pt2(example))
     print('part2', solve_pt2(lines))
