@@ -30,13 +30,21 @@ def is_possible(line):
     return int(gn) if possible else 0
 
 
+def solve_pt1(data):
+    return sum([is_possible(line) for line in data])
+
+
 def find_power(line):
     (gn, r, g, b) = gn_rgb(line)
     return r*g*b
 
 
+def solve_pt2(data):
+    return sum([find_power(line) for line in data])
+
+
 if __name__ == '__main__':
-    print('ex1', sum([is_possible(line) for line in example]))
-    print('part1', sum([is_possible(line) for line in lines]))
-    print('ex2', sum([find_power(line) for line in example]))
-    print('part2', sum([find_power(line) for line in lines]))
+    print('ex1', solve_pt1(example))
+    print('part1', solve_pt1(lines))
+    print('ex2', solve_pt2(example))
+    print('part2', solve_pt2(lines))

@@ -32,6 +32,10 @@ def summed_calibrations(data):
     return sum([calibration(x) for x in data])
 
 
+def solve_pt1(data):
+    return summed_calibrations(data)
+
+
 def find_digits_and_number_words(s):
     matches = re.finditer(
         r'(?=(one|two|three|four|five|six|seven|eight|nine|[0-9]))', s)
@@ -55,9 +59,16 @@ def summed_calibrations_v2(data):
     return sum([calibration_v2(x) for x in data])
 
 
-if __name__ == '__main__':
-    print(summed_calibrations(example1))
-    print(summed_calibrations(lines))
+def solve_pt2(data):
+    return summed_calibrations_v2(data)
 
-    print(summed_calibrations_v2(example2))
-    print(summed_calibrations_v2(lines))
+
+if __name__ == '__main__':
+    # print(solve_pt1(example1))
+    # print(solve_pt1(lines))
+    # print(solve_pt2(example2))
+    # print(solve_pt2(lines))
+    print('ex1', solve_pt1(example1))
+    print('part1', solve_pt1(lines))
+    print('ex2', solve_pt2(example2))
+    print('part2', solve_pt2(lines))
