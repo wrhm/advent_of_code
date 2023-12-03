@@ -4,4 +4,4 @@
 (executable
  (public_name aoc)
  (name aoc)
- (libraries base stdio))
+ (libraries base stdio fmt))
