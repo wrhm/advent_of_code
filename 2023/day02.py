@@ -30,14 +30,13 @@ def is_possible(line):
     return int(gn) if possible else 0
 
 
-print('ex1', sum([is_possible(line) for line in example]))
-print('part1', sum([is_possible(line) for line in lines]))
-
-
 def find_power(line):
     (gn, r, g, b) = gn_rgb(line)
     return r*g*b
 
 
-print('ex2', sum([find_power(line) for line in example]))
-print('part2', sum([find_power(line) for line in lines]))
+if __name__ == '__main__':
+    print('ex1', sum([is_possible(line) for line in example]))
+    print('part1', sum([is_possible(line) for line in lines]))
+    print('ex2', sum([find_power(line) for line in example]))
+    print('part2', sum([find_power(line) for line in lines]))
