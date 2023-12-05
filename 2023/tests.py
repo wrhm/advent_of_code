@@ -9,6 +9,7 @@ import day00
 import day01
 import day02
 import day03
+import day04
 
 
 assert day00.solve_pt1(day00.example) == ''
@@ -22,3 +23,6 @@ assert day02.solve_pt2(day02.example) == 2286
 
 assert day03.solve_pt1(day03.example) == 4361
 assert day03.solve_pt2(day03.example) == 467835
+
+assert day04.solve_pt1(day04.example) == 13
+assert day04.solve_pt2(day04.example) == 30
