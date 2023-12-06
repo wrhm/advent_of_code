@@ -1,11 +1,13 @@
 # day04.py
 
-import common.shared_utils as su
-import sys
 import os
-parent_dir = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(parent_dir)
-sys.path.append(parent_dir+'/..')
+import sys
+
+if True:
+    parent_dir = os.path.dirname(os.path.realpath(__file__))
+    sys.path.append(parent_dir)
+    sys.path.append(parent_dir+'/..')
+    import common.shared_utils as su
 
 lines = su.file_as_lines('inputs/04/a.txt')
 

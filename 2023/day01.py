@@ -1,14 +1,15 @@
 # day01.py
 
-import sys
 import os
-parent_dir = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(parent_dir)
-sys.path.append(parent_dir+'/..')
-import common.shared_utils as su
+import sys
+
+if True:
+    parent_dir = os.path.dirname(os.path.realpath(__file__))
+    sys.path.append(parent_dir)
+    sys.path.append(parent_dir+'/..')
+    import common.shared_utils as su
 
 import re
-import util
 
 lines = su.file_as_lines('inputs/01/a.txt')
 
