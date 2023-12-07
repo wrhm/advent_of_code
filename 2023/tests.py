@@ -31,3 +31,4 @@ assert day04.solve_pt1(day04.example) == 13
 assert day04.solve_pt2(day04.example) == 30
 
 assert day05.solve_pt1(day05.example) == 35
+# assert day05.solve_pt2(day05.example) == 46
