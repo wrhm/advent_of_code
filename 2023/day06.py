@@ -1,4 +1,4 @@
-# day00.py
+# day06.py
 
 import sys
 import os
@@ -15,14 +15,14 @@ example = '''Time:      7  15   30
 Distance:  9  40  200'''.split('\n')
 
 
+def split_nums(st):
+    return st.split(':')[1].split()
+
+
 def races(data):
-    times = [int(x) for x in data[0].split(':')[1].split()]
-    dists = [int(x) for x in data[1].split(':')[1].split()]
+    times = [int(x) for x in split_nums(data[0])]
+    dists = [int(x) for x in split_nums(data[1])]
     return [x for x in zip(times, dists)]
-
-
-def dists_with_delays(time):
-    return [(i, i*(time-i)) for i in range(time+1)]
 
 
 def ways_to_win(time, dist_to_beat):
@@ -42,8 +42,8 @@ def solve_pt1(data):
 
 
 def parse_single_race(data):
-    time = int(''.join(data[0].split(':')[1].split()))
-    dist = int(''.join(data[1].split(':')[1].split()))
+    time = int(''.join(split_nums(data[0])))
+    dist = int(''.join(split_nums(data[1])))
     return (time, dist)
 
 
