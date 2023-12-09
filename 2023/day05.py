@@ -224,7 +224,7 @@ def combine_rwds(left, right):
     print(intvs)
 
 
-def solve_pt2(data):
+def solve_pt2v2(data):
     # return solve_pt2_brute(data)
     (seeds, maps) = parse_data(data)
 
@@ -252,8 +252,124 @@ def solve_pt2(data):
     return ''
 
 
+'''
+add [0,x] if missing
+
+ 0  1  2  3  4  5
++0 +0 +0 +0 +0 +0
+
+[dest,src,range_len] --> [start,end,delta]
+
+composing lists of [[start,end,delta], [start,end,delta], ...]
+
+ 0  1  2  3  4  5
++0 +0 +0 +0 +0 +0
+
+add [start=1,end=3,delta=+2]
+
+ 0  1  2  3  4  5
++0 +0 +0 +0 +0 +0
+   +2 +2 +2
+
+[[0,5,0]] becomes [[0,0,0],[1,3,2],[4,5,0]]
+
+add [start=2,end=4,delta=-1]
+
+ 0  1  2  3  4  5
++0 +0 +0 +0 +0 +0
+   +2 +2 +2
+      -1 -1 -1
+
+[[0,0,0],[1,3,2],[4,5,0]] becomes
+[[0,0,0],[1,1,2],[2,3,1],[4,4,-1],[5,5,0]]
+
+'''
+
+
+def dsr_to_sed(dsr):
+    [dest, src, range_len] = dsr
+    start = src
+    end = src+range_len-1
+    delta = dest-src
+    return [start, end, delta]
+
+
+'''
+ 0  1  2  3  4  5
++0 +0 +0 +0 +0 +0
+   +2 +2 +2
+
+[[1,3,2]] with [[0,5,0]] becomes
+[[0,0,0],[1,3,2],[4,5,0]]
+
+[  ]    []    [ ]     [ ]
+ []    [  ]    [ ]   [ ]
+'''
+
+
+def combine_seds(a, b):
+    ret = []
+    # a.reverse()
+    # b.reverse()
+    while len(a) > 0 and len(b) > 0:
+        print('a', a)
+        print('b', b)
+        print('ret', ret)
+        fa, a = a[0], a[1:]
+        fb, b = b[0], b[1:]
+        print('fa', fa)
+        print('fb', fb)
+        [sa, ea, da] = fa
+        [sb, eb, db] = fb
+        if sa == sb and ea == eb:
+            print('case1')
+            ret.append([sa, ea, da+db])
+        elif sa < sb and ea > eb:
+            print('case2')
+            ret.append([sa, sb-1, da])
+            a = [[sb, ea, da]]+a
+            b = [fb]+b
+        elif sb < sa and eb > ea:
+            print('case3')
+            ret.append([sb, sa-1, db])
+            b = [[sa, eb, db]]+b
+            a = [fa]+a
+        elif sa < sb and ea < eb:
+            print('case4')
+            ret.append([sa, sb-1, da])
+            a = [[sb, ea, da]]+a
+            b = [fb]+b
+        elif sa > sb and ea > eb:
+            print('case5')
+            ret.append([sb, sa-1, db])
+            b = [[sa, eb, db]]+b
+            a = [fa]+a
+        else:
+            print('intervals share 1 boundary: ', fa, fb)
+            return None
+    print(ret)
+    return ret
+
+
+def solve_pt2(data):
+    (seeds, maps) = parse_data(data)
+    print(seeds)
+    print(maps)
+
+    for (label, maps_lst) in maps:
+        print(label)
+        seds = sorted([dsr_to_sed(x) for x in maps_lst])
+        print(seds)
+        if seds[0][0] != 0:
+            seds = [[0, seds[0][0]-1, 0]]+seds
+        print(seds)
+    pass
+
+
 if __name__ == '__main__':
     # print('ex1', solve_pt1(example))
     # print('part1', solve_pt1(lines))
-    print('ex2', solve_pt2(example))
+    # print('ex2', solve_pt2(example))
     # print('part2', solve_pt2(lines))
+
+    combine_seds([[0, 5, 0]], [[1, 3, 2]])
