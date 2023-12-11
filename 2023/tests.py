@@ -51,4 +51,7 @@ assert day09.solve_pt1(day09.example) == 114
 assert day09.solve_pt2(day09.example) == 2
 
 assert day10.solve_pt1(day10.example) == 8
-assert day10.solve_pt2(day10.example2) == -1
+assert day10.solve_pt2(day10.example2) == 4
+assert day10.solve_pt2(day10.example3) == 4
+assert day10.solve_pt2(day10.example4) == 8
+assert day10.solve_pt2(day10.example5) == 10
