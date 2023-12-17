@@ -50,7 +50,6 @@ def total_load(g):
     h = len(g)
     ret = 0
     for i, r in enumerate(g):
-        # print(''.join(r), h-i)
         for x in r:
             if x == 'O':
                 ret += h-i
@@ -123,11 +122,8 @@ def solve_pt2(data):
     gap = None
     for i in range(1, 10000):
         g = spin_cycle(g)
-        # print('\n=%d=\n' % i)
-        # dispj(g)
         dj = double_join(g)
         if dj in d:
-            print(i, 'matches', d[dj])
             start = d[dj][0]
             gap = i-d[dj][0]
             break
@@ -136,19 +132,15 @@ def solve_pt2(data):
     n = 1000000000
     if gap is None:
         return None
-    # print(n, gap, n % gap)
-    print('start=%d, gap=%d' % (start, gap))
-    # pinrt('N %% %d = %d'%())
+
     for x in d:
-        # print(x, d[x])
-        print("[len %d]" % len(x), d[x])
         if d[x][0] == ((n-start) % gap)+start:
             return d[x][1]
     return None
 
 
 if __name__ == '__main__':
-    # print('ex1', solve_pt1(example))
-    # print('part1', solve_pt1(lines))
+    print('ex1', solve_pt1(example))
+    print('part1', solve_pt1(lines))
     print('ex2', solve_pt2(example))
     print('part2', solve_pt2(lines))
