@@ -29,16 +29,6 @@ def solve_pt1(data):
 
 
 def solve_pt2(data):
-    # # k:h, v:[(label,fl),(label,fl),...]
-    # d = dict()
-    # for i, x in enumerate(data[0].split(',')):
-    #     lens = x.split('=')[0]
-    #     h = hash(lens)
-    #     if x[-1] == '-':
-    #         for i in range(len(d[h])):
-    #             if d[h][i][0] == lens:
-    #                 # d[h] = d[h][:i]+d[h][i+1:]
-
     # k: box
     # v:
     #   k: label
@@ -65,11 +55,6 @@ def solve_pt2(data):
             else:
                 hm[label] = (focal_len, i)
 
-        print('=')
-        for k in d:
-            print(k, d[k])
-
-    print('===')
     ret = 0
     for box in range(256):
         if box not in d:
@@ -80,19 +65,16 @@ def solve_pt2(data):
             if v is not None:
                 labels.append((k, v[0], v[1]))
         labels = sorted(labels, key=lambda x: x[2])
-        # print(box, labels)
         labels = [(x[0], int(x[1])) for x in labels]
-        print(box, labels)
         for j, (_, fl) in enumerate(labels):
             fp = (1+box)*(1+j)*fl
-            print(fp)
             ret += fp
 
     return ret
 
 
 if __name__ == '__main__':
-    # print('ex1', solve_pt1(example))
-    # print('part1', solve_pt1(lines))
+    print('ex1', solve_pt1(example))
+    print('part1', solve_pt1(lines))
     print('ex2', solve_pt2(example))
     print('part2', solve_pt2(lines))
