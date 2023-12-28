@@ -65,20 +65,12 @@ def parse_lines(data):
             parsing_wfs = False
             continue
         if parsing_wfs:
-            # [wfn,rest] = line.split('{')
-            # workflows.append(parse_wf(line))
             (name, rules, default) = parse_wf(line)
             workflows[name] = (rules, default)
         else:
             parts.append(parse_part(line))
     return (workflows, parts)
 
-
-# def iterate_part(p, wfs):
-#     k = 'in'
-#     while True:
-#         if k not in wfs:
-#             return None
 
 def applies(cmp, p):
     if '<' in cmp:
@@ -100,19 +92,11 @@ def lookup(wf, p):
 
 def solve_pt1(data):
     (wfs, ps) = parse_lines(data)
-    for x in ps:
-        print(x)
-    print('===')
-    for k in wfs:
-        print(k, wfs[k])
-    print('===')
     result = 0
     for p in ps:
         k = 'in'
-        # print(p, lookup(wfs[k], p))
         while k not in ['A', 'R']:
             k = lookup(wfs[k], p)
-        print(p, 'finishes at', k)
         if k == 'A':
             for c in 'xmas':
                 result += p[c]
