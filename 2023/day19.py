@@ -105,11 +105,35 @@ def solve_pt1(data):
 
 
 def solve_pt2(data):
+    (wfs, ps) = parse_lines(data)
+    children = dict()
+    for w in wfs:
+        print(w, wfs[w])
+        (cmps, default) = wfs[w]
+        if w not in children:
+            children[w] = [default]
+            for (_, ch) in cmps:
+                children[w].append(ch)
+    print('children')
+    for k in children:
+        print(k, children[k])
+    parents = dict()
+    for p in children:
+        for c in children[p]:
+            if c not in parents:
+                parents[c] = []
+            parents[c].append(p)
+    print('parents')
+    for k in parents:
+        print(k, parents[k])
+
+    q = []
+
     return ''
 
 
 if __name__ == '__main__':
     print('ex1', solve_pt1(example))
     print('part1', solve_pt1(lines))
-    # print('ex2', solve_pt2(example))
+    print('ex2', solve_pt2(example))
     # print('part2', solve_pt2(lines))
