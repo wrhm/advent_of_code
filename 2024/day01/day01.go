@@ -16,10 +16,6 @@ var example = `3   4
 3   9
 3   3`
 
-// func numLists() ([]int, []int) {
-
-// }
-
 func numLists(contents string) ([]int, []int) {
 	var list0 []int
 	var list1 []int
@@ -61,15 +57,11 @@ func counts(nums []int) map[int]int {
 func partTwo(contents string) {
 	list0, list1 := numLists(contents)
 	right := counts(list1)
-	// fmt.Println(right)
 	ret := 0
 	for _, v := range list0 {
 		val, ok := right[v]
 		if ok {
-			// fmt.Printf("%d occurs %d times in list1\n", v, val)
 			ret += v * val
-		} else {
-			// fmt.Printf("%d is missing from list1\n", v)
 		}
 	}
 	fmt.Printf("part 2 total: %d\n", ret)
