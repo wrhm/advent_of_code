@@ -17,3 +17,7 @@
 go.work
 go.work.sum
 .env
+
+# Ignore Go executables "dayXY", where
+# X and Y are digits.
+*day??
