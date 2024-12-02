@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -71,7 +71,7 @@ func main() {
 	fmt.Println("Example:")
 	sumDiffs(example)
 	partTwo(example)
-	data, _ := ioutil.ReadFile("day01.txt")
+	data, _ := os.ReadFile("day01.txt")
 	content := string(data)
 	fmt.Println("\nFrom file:")
 	sumDiffs(string(content))

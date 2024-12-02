@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -135,7 +135,7 @@ func main() {
 	fmt.Println("Example:")
 	partOne(example)
 	partTwo(example)
-	data, _ := ioutil.ReadFile("day02.txt")
+	data, _ := os.ReadFile("day02.txt")
 	content := string(data)
 	fmt.Println("\nFrom file:")
 	partOne(string(content))
