@@ -12,7 +12,7 @@ import (
 
 const input_file string = "day01.txt"
 
-var example = `3   4
+const example = `3   4
 4   3
 2   5
 1   3

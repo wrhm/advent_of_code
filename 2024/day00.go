@@ -8,7 +8,7 @@ import (
 
 const input_file string = "day00.txt"
 
-var example = `EXAMPLE CASE HERE
+const example = `EXAMPLE CASE HERE
 `
 
 func partOne(contents string) {
