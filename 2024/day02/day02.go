@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-
-	// "slices"
 	"strconv"
 	"strings"
 )
@@ -97,27 +95,17 @@ func partOne(contents string) {
 
 // returns all cases of removing a single element from vals.
 func removals(vals []int) [][]int {
-	// fmt.Println(vals)
-
 	var ret [][]int
 	for i := range vals {
 		var row []int
-		// if i == 0 || i == len(vals) {
-		// 	continue
-		// }
-		// fmt.Println(append(vals[:i+1], vals[i+2:]...))
-		// fmt.Println(i, vals[:i], vals[i:])
 		left := vals[:i]
 		right := vals[i+1:]
-		// joined := append(left, right...)
-		// fmt.Println(i, vals[:i], vals[i], vals[i+1:]) //, joined)
 		for _, v := range left {
 			row = append(row, v)
 		}
 		for _, v := range right {
 			row = append(row, v)
 		}
-		// fmt.Println(row)
 		ret = append(ret, row)
 	}
 	return ret
@@ -139,7 +127,6 @@ func partTwo(contents string) {
 				}
 			}
 		}
-		// break
 	}
 	fmt.Printf("part 2 total: %d\n", ret)
 }
