@@ -5,7 +5,10 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
+
+const input_file string = "day02.txt"
 
 var example = `7 6 4 2 1
 1 2 7 8 9
@@ -83,6 +86,7 @@ func isValid(vals []int) bool {
 }
 
 func partOne(contents string) {
+	start := time.Now()
 	var lists = numLists2d(contents)
 	var ret = 0
 	for _, t := range lists {
@@ -90,7 +94,9 @@ func partOne(contents string) {
 			ret++
 		}
 	}
-	fmt.Printf("part 1 total: %d\n", ret)
+	fmt.Printf("part 1 result: %d\n", ret)
+	elapsed := time.Since(start)
+	fmt.Println("part 1 time: ", elapsed)
 }
 
 // returns all cases of removing a single element from vals.
@@ -113,6 +119,7 @@ func removals(vals []int) [][]int {
 }
 
 func partTwo(contents string) {
+	start := time.Now()
 	var lists = numLists2d(contents)
 	var ret = 0
 	for _, t := range lists {
@@ -128,14 +135,16 @@ func partTwo(contents string) {
 			}
 		}
 	}
-	fmt.Printf("part 2 total: %d\n", ret)
+	fmt.Printf("part 2 result: %d\n", ret)
+	elapsed := time.Since(start)
+	fmt.Println("part 2 time: ", elapsed)
 }
 
 func main() {
 	fmt.Println("Example:")
 	partOne(example)
 	partTwo(example)
-	data, _ := os.ReadFile("day02.txt")
+	data, _ := os.ReadFile(input_file)
 	content := string(data)
 	fmt.Println("\nFrom file:")
 	partOne(string(content))

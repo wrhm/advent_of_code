@@ -7,7 +7,10 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
+
+const input_file string = "day01.txt"
 
 var example = `3   4
 4   3
@@ -30,7 +33,8 @@ func numLists(contents string) ([]int, []int) {
 	return list0, list1
 }
 
-func sumDiffs(contents string) {
+func partOne(contents string) {
+	start := time.Now()
 	list0, list1 := numLists(contents)
 	sort.Ints(list0)
 	sort.Ints(list1)
@@ -38,7 +42,9 @@ func sumDiffs(contents string) {
 	for i, v := range list0 {
 		total_diffs += int(math.Abs(float64(v - list1[i])))
 	}
-	fmt.Printf("part 1 total: %d\n", total_diffs)
+	fmt.Printf("part 1 result: %d\n", total_diffs)
+	elapsed := time.Since(start)
+	fmt.Println("part 1 time: ", elapsed)
 }
 
 func counts(nums []int) map[int]int {
@@ -55,6 +61,7 @@ func counts(nums []int) map[int]int {
 }
 
 func partTwo(contents string) {
+	start := time.Now()
 	list0, list1 := numLists(contents)
 	right := counts(list1)
 	ret := 0
@@ -64,16 +71,18 @@ func partTwo(contents string) {
 			ret += v * val
 		}
 	}
-	fmt.Printf("part 2 total: %d\n", ret)
+	fmt.Printf("part 2 result: %d\n", ret)
+	elapsed := time.Since(start)
+	fmt.Println("part 2 time: ", elapsed)
 }
 
 func main() {
 	fmt.Println("Example:")
-	sumDiffs(example)
+	partOne(example)
 	partTwo(example)
-	data, _ := os.ReadFile("day01.txt")
+	data, _ := os.ReadFile(input_file)
 	content := string(data)
 	fmt.Println("\nFrom file:")
-	sumDiffs(string(content))
+	partOne(string(content))
 	partTwo(string(content))
 }
