@@ -20,4 +20,4 @@ go.work.sum
 
 # Ignore Go executables "dayXY", where
 # X and Y are digits.
-*day??
+*day??/day??
