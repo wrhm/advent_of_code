@@ -12,16 +12,21 @@ const input_file string = "day03.txt"
 
 const example = `xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))`
 
+func parseNums(s string) (int, int) {
+	dr, _ := regexp.Compile(`\d+`)
+	num_strs := dr.FindAllString(s, -1)
+	a, _ := strconv.Atoi(num_strs[0])
+	b, _ := strconv.Atoi(num_strs[1])
+	return a, b
+}
+
 func partOne(contents string) {
 	start := time.Now()
 	fns, _ := regexp.Compile(`mul\(\d{1,3},\d{1,3}\)`)
 	matches := fns.FindAllString(contents, -1)
-	dr, _ := regexp.Compile(`\d+`)
 	var total = 0
 	for _, v := range matches {
-		num_strs := dr.FindAllString(v, -1)
-		a, _ := strconv.Atoi(num_strs[0])
-		b, _ := strconv.Atoi(num_strs[1])
+		a, b := parseNums(v)
 		total += a * b
 	}
 	var ret = total
@@ -34,7 +39,6 @@ func partTwo(contents string) {
 	start := time.Now()
 	fns, _ := regexp.Compile(`mul\(\d{1,3},\d{1,3}\)|do\(\)|don\'t\(\)`)
 	matches := fns.FindAllString(contents, -1)
-	dr, _ := regexp.Compile(`\d+`)
 	var total = 0
 	var in_do bool = true
 	for _, v := range matches {
@@ -47,9 +51,7 @@ func partTwo(contents string) {
 			continue
 		}
 		if in_do {
-			num_strs := dr.FindAllString(v, -1)
-			a, _ := strconv.Atoi(num_strs[0])
-			b, _ := strconv.Atoi(num_strs[1])
+			a, b := parseNums(v)
 			total += a * b
 		}
 	}
