@@ -8,9 +8,7 @@ import (
 	"time"
 )
 
-const input_file string = "day03.txt"
-
-const example = `xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))`
+const day03example = `xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))`
 
 func parseNums(s string) (int, int) {
 	dr, _ := regexp.Compile(`\d+`)
@@ -20,7 +18,7 @@ func parseNums(s string) (int, int) {
 	return a, b
 }
 
-func partOne(contents string) {
+func day03partOne(contents string) {
 	start := time.Now()
 	fns, _ := regexp.Compile(`mul\(\d{1,3},\d{1,3}\)`)
 	matches := fns.FindAllString(contents, -1)
@@ -35,7 +33,7 @@ func partOne(contents string) {
 	fmt.Println("part 1 time: ", elapsed)
 }
 
-func partTwo(contents string) {
+func day03partTwo(contents string) {
 	start := time.Now()
 	fns, _ := regexp.Compile(`mul\(\d{1,3},\d{1,3}\)|do\(\)|don\'t\(\)`)
 	matches := fns.FindAllString(contents, -1)
@@ -61,16 +59,16 @@ func partTwo(contents string) {
 	fmt.Println("part 2 time: ", elapsed)
 }
 
-func main() {
+func day03main() {
 	start := time.Now()
 	fmt.Println("Example:")
-	partOne(example)
-	partTwo(example)
-	data, _ := os.ReadFile(input_file)
+	day03partOne(day03example)
+	day03partTwo(day03example)
+	data, _ := os.ReadFile("inputs/day03.txt")
 	content := string(data)
 	fmt.Println("\nFrom file:")
-	partOne(string(content))
-	partTwo(string(content))
+	day03partOne(string(content))
+	day03partTwo(string(content))
 	elapsed := time.Since(start)
 	fmt.Println("total time: ", elapsed)
 }

@@ -10,9 +10,7 @@ import (
 	"time"
 )
 
-const input_file string = "day01.txt"
-
-const example = `3   4
+const day01example = `3   4
 4   3
 2   5
 1   3
@@ -33,7 +31,7 @@ func numLists(contents string) ([]int, []int) {
 	return list0, list1
 }
 
-func partOne(contents string) {
+func day01partOne(contents string) {
 	start := time.Now()
 	list0, list1 := numLists(contents)
 	sort.Ints(list0)
@@ -60,7 +58,7 @@ func counts(nums []int) map[int]int {
 	return ret
 }
 
-func partTwo(contents string) {
+func day01partTwo(contents string) {
 	start := time.Now()
 	list0, list1 := numLists(contents)
 	right := counts(list1)
@@ -76,16 +74,16 @@ func partTwo(contents string) {
 	fmt.Println("part 2 time: ", elapsed)
 }
 
-func main() {
+func day01main() {
 	start := time.Now()
 	fmt.Println("Example:")
-	partOne(example)
-	partTwo(example)
-	data, _ := os.ReadFile(input_file)
+	day01partOne(day01example)
+	day01partTwo(day01example)
+	data, _ := os.ReadFile("inputs/day01.txt")
 	content := string(data)
 	fmt.Println("\nFrom file:")
-	partOne(string(content))
-	partTwo(string(content))
+	day01partOne(string(content))
+	day01partTwo(string(content))
 	elapsed := time.Since(start)
 	fmt.Println("total time: ", elapsed)
 }

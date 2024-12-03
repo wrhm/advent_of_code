@@ -8,9 +8,7 @@ import (
 	"time"
 )
 
-const input_file string = "day02.txt"
-
-const example = `7 6 4 2 1
+const day02example = `7 6 4 2 1
 1 2 7 8 9
 9 7 6 2 1
 1 3 2 4 5
@@ -85,7 +83,7 @@ func isValid(vals []int) bool {
 	return (isIncreasing(vals) || isDecreasing(vals)) && hasBoundedDiffs(vals)
 }
 
-func partOne(contents string) {
+func day02partOne(contents string) {
 	start := time.Now()
 	var lists = numLists2d(contents)
 	var ret = 0
@@ -118,7 +116,7 @@ func removals(vals []int) [][]int {
 
 }
 
-func partTwo(contents string) {
+func day02partTwo(contents string) {
 	start := time.Now()
 	var lists = numLists2d(contents)
 	var ret = 0
@@ -140,16 +138,16 @@ func partTwo(contents string) {
 	fmt.Println("part 2 time: ", elapsed)
 }
 
-func main() {
+func day02main() {
 	start := time.Now()
 	fmt.Println("Example:")
-	partOne(example)
-	partTwo(example)
-	data, _ := os.ReadFile(input_file)
+	day02partOne(day02example)
+	day02partTwo(day02example)
+	data, _ := os.ReadFile("inputs/day02.txt")
 	content := string(data)
 	fmt.Println("\nFrom file:")
-	partOne(string(content))
-	partTwo(string(content))
+	day02partOne(string(content))
+	day02partTwo(string(content))
 	elapsed := time.Since(start)
 	fmt.Println("total time: ", elapsed)
 }
