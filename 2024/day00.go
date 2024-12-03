@@ -30,15 +30,15 @@ func partTwo(contents string) {
 }
 
 func main() {
-	// start := time.Now()
+	start := time.Now()
 	fmt.Println("Example:")
 	partOne(example)
 	partTwo(example)
-	// elapsed := time.Since(start)
-	// fmt.Println("part 2 time: ", elapsed)
 	data, _ := os.ReadFile(input_file)
 	content := string(data)
 	fmt.Println("\nFrom file:")
 	partOne(string(content))
 	partTwo(string(content))
+	elapsed := time.Since(start)
+	fmt.Println("total time: ", elapsed)
 }
