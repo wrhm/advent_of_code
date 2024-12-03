@@ -15,8 +15,7 @@ const example = `xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)m
 func partOne(contents string) {
 	start := time.Now()
 	fns, _ := regexp.Compile(`mul\(\d{1,3},\d{1,3}\)`)
-	cleaned := contents
-	matches := fns.FindAllString(cleaned, -1)
+	matches := fns.FindAllString(contents, -1)
 	dr, _ := regexp.Compile(`\d+`)
 	var total = 0
 	for _, v := range matches {
@@ -34,9 +33,8 @@ func partOne(contents string) {
 func partTwo(contents string) {
 	start := time.Now()
 	fns, _ := regexp.Compile(`mul\(\d{1,3},\d{1,3}\)|do\(\)|don\'t\(\)`)
-	fmt.Println(fns.FindAllString(contents, -1))
-	cleaned := contents
-	matches := fns.FindAllString(cleaned, -1)
+	// fmt.Println(fns.FindAllString(contents, -1))
+	matches := fns.FindAllString(contents, -1)
 	dr, _ := regexp.Compile(`\d+`)
 	var total = 0
 	var in_do bool = true
