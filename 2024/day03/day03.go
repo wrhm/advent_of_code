@@ -33,7 +33,6 @@ func partOne(contents string) {
 func partTwo(contents string) {
 	start := time.Now()
 	fns, _ := regexp.Compile(`mul\(\d{1,3},\d{1,3}\)|do\(\)|don\'t\(\)`)
-	// fmt.Println(fns.FindAllString(contents, -1))
 	matches := fns.FindAllString(contents, -1)
 	dr, _ := regexp.Compile(`\d+`)
 	var total = 0
