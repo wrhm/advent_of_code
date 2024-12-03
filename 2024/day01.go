@@ -80,6 +80,5 @@ func day01main() {
 	fmt.Println("\nFrom file:")
 	day01partOne(content)
 	day01partTwo(content)
-	elapsed := time.Since(start)
-	fmt.Println("total time: ", elapsed)
+	LogTimingForDay(start)
 }
