@@ -31,8 +31,8 @@ func day00main() {
 	data, _ := os.ReadFile("inputs/day00.txt")
 	content := string(data)
 	fmt.Println("\nFrom file:")
-	day00partOne(string(content))
-	day00partTwo(string(content))
+	day00partOne(content)
+	day00partTwo(content)
 	elapsed := time.Since(start)
 	fmt.Println("total time: ", elapsed)
 }
