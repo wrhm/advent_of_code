@@ -13,18 +13,14 @@ func day00partOne(contents string) {
 	start := time.Now()
 	fmt.Printf("contents has size %d\n", len(contents))
 	var ret = 0
-	fmt.Printf("part 1 result: %d\n", ret)
-	elapsed := time.Since(start)
-	fmt.Println("part 1 time: ", elapsed)
+	LogPartOneResult(ret, start)
 }
 
 func day00partTwo(contents string) {
 	start := time.Now()
 	fmt.Printf("contents has size %d\n", len(contents))
 	var ret = 0
-	fmt.Printf("part 2 result: %d\n", ret)
-	elapsed := time.Since(start)
-	fmt.Println("part 2 time: ", elapsed)
+	LogPartTwoResult(ret, start)
 }
 
 func day00main() {

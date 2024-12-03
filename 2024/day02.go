@@ -92,9 +92,7 @@ func day02partOne(contents string) {
 			ret++
 		}
 	}
-	fmt.Printf("part 1 result: %d\n", ret)
-	elapsed := time.Since(start)
-	fmt.Println("part 1 time: ", elapsed)
+	LogPartOneResult(ret, start)
 }
 
 // returns all cases of removing a single element from vals.
@@ -133,9 +131,7 @@ func day02partTwo(contents string) {
 			}
 		}
 	}
-	fmt.Printf("part 2 result: %d\n", ret)
-	elapsed := time.Since(start)
-	fmt.Println("part 2 time: ", elapsed)
+	LogPartTwoResult(ret, start)
 }
 
 func day02main() {

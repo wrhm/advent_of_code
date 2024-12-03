@@ -40,9 +40,7 @@ func day01partOne(contents string) {
 	for i, v := range list0 {
 		total_diffs += int(math.Abs(float64(v - list1[i])))
 	}
-	fmt.Printf("part 1 result: %d\n", total_diffs)
-	elapsed := time.Since(start)
-	fmt.Println("part 1 time: ", elapsed)
+	LogPartOneResult(total_diffs, start)
 }
 
 func counts(nums []int) map[int]int {
@@ -69,9 +67,7 @@ func day01partTwo(contents string) {
 			ret += v * val
 		}
 	}
-	fmt.Printf("part 2 result: %d\n", ret)
-	elapsed := time.Since(start)
-	fmt.Println("part 2 time: ", elapsed)
+	LogPartTwoResult(ret, start)
 }
 
 func day01main() {

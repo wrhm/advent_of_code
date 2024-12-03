@@ -27,10 +27,7 @@ func day03partOne(contents string) {
 		a, b := parseNums(v)
 		total += a * b
 	}
-	var ret = total
-	fmt.Printf("part 1 result: %d\n", ret)
-	elapsed := time.Since(start)
-	fmt.Println("part 1 time: ", elapsed)
+	LogPartOneResult(total, start)
 }
 
 func day03partTwo(contents string) {
@@ -54,9 +51,7 @@ func day03partTwo(contents string) {
 		}
 	}
 	var ret = total
-	fmt.Printf("part 2 result: %d\n", ret)
-	elapsed := time.Since(start)
-	fmt.Println("part 2 time: ", elapsed)
+	LogPartTwoResult(ret, start)
 }
 
 func day03main() {
