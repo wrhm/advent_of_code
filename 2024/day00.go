@@ -28,7 +28,7 @@ func day00main() {
 	fmt.Println("Example:")
 	day00partOne(day00example)
 	day00partTwo(day00example)
-	data, _ := os.ReadFile("day00.txt")
+	data, _ := os.ReadFile("inputs/day00.txt")
 	content := string(data)
 	fmt.Println("\nFrom file:")
 	day00partOne(string(content))
