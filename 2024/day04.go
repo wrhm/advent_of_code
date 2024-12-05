@@ -22,7 +22,7 @@ func inBounds(x int, lo int, hi int) bool {
 	return lo <= x && x <= hi
 }
 
-func gridHasCharAtPos(lines *([]string), r int, c int, b byte) int {
+func gridHasByteAtPos(lines *([]string), r int, c int, b byte) int {
 	w := len((*lines)[0])
 	h := len(*lines)
 	if inBounds(r, 0, h-1) && inBounds(c, 0, w-1) && (*lines)[r][c] == b {
@@ -32,6 +32,8 @@ func gridHasCharAtPos(lines *([]string), r int, c int, b byte) int {
 }
 
 func day04partOne(contents string) {
+	// For all starting positions in the grid, search for the string in all 8
+	// possible directions.
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
 	w := len(lines[0])
@@ -41,14 +43,17 @@ func day04partOne(contents string) {
 		for c := 0; c < w; c++ {
 			for dr := -1; dr <= 1; dr++ {
 				for dc := -1; dc <= 1; dc++ {
+					if dr == 0 && dc == 0 {
+						continue
+					}
 					x_r, x_c := r+0*dr, c+0*dc
-					has_x := gridHasCharAtPos(&lines, x_r, x_c, 'X')
+					has_x := gridHasByteAtPos(&lines, x_r, x_c, 'X')
 					m_r, m_c := r+1*dr, c+1*dc
-					has_m := gridHasCharAtPos(&lines, m_r, m_c, 'M')
+					has_m := gridHasByteAtPos(&lines, m_r, m_c, 'M')
 					a_r, a_c := r+2*dr, c+2*dc
-					has_a := gridHasCharAtPos(&lines, a_r, a_c, 'A')
+					has_a := gridHasByteAtPos(&lines, a_r, a_c, 'A')
 					s_r, s_c := r+3*dr, c+3*dc
-					has_s := gridHasCharAtPos(&lines, s_r, s_c, 'S')
+					has_s := gridHasByteAtPos(&lines, s_r, s_c, 'S')
 					if has_x+has_m+has_a+has_s == 4 {
 						total++
 					}
@@ -60,6 +65,10 @@ func day04partOne(contents string) {
 }
 
 func day04partTwo(contents string) {
+	// Consider each position as the center of the snowflake, which must be an
+	// "A". Next, grab all diagonal neighbors. These must consist of 2 "M"s and
+	// 2 "S"s. Additionally, the "M"s must not be diagonally opposite each
+	// other.
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
 	w := len(lines[0])
@@ -68,7 +77,7 @@ func day04partTwo(contents string) {
 	for r := 0; r < h; r++ {
 		for c := 0; c < w; c++ {
 			a_r, a_c := r, c
-			has_a := gridHasCharAtPos(&lines, a_r, a_c, 'A')
+			has_a := gridHasByteAtPos(&lines, a_r, a_c, 'A')
 			if has_a == 0 {
 				continue
 			}
@@ -76,14 +85,14 @@ func day04partTwo(contents string) {
 			ne_r, ne_c := r-1, c+1
 			sw_r, sw_c := r+1, c-1
 			se_r, se_c := r+1, c+1
-			nwm := gridHasCharAtPos(&lines, nw_r, nw_c, 'M')
-			nws := gridHasCharAtPos(&lines, nw_r, nw_c, 'S')
-			nem := gridHasCharAtPos(&lines, ne_r, ne_c, 'M')
-			nes := gridHasCharAtPos(&lines, ne_r, ne_c, 'S')
-			swm := gridHasCharAtPos(&lines, sw_r, sw_c, 'M')
-			sws := gridHasCharAtPos(&lines, sw_r, sw_c, 'S')
-			sem := gridHasCharAtPos(&lines, se_r, se_c, 'M')
-			ses := gridHasCharAtPos(&lines, se_r, se_c, 'S')
+			nwm := gridHasByteAtPos(&lines, nw_r, nw_c, 'M')
+			nws := gridHasByteAtPos(&lines, nw_r, nw_c, 'S')
+			nem := gridHasByteAtPos(&lines, ne_r, ne_c, 'M')
+			nes := gridHasByteAtPos(&lines, ne_r, ne_c, 'S')
+			swm := gridHasByteAtPos(&lines, sw_r, sw_c, 'M')
+			sws := gridHasByteAtPos(&lines, sw_r, sw_c, 'S')
+			sem := gridHasByteAtPos(&lines, se_r, se_c, 'M')
+			ses := gridHasByteAtPos(&lines, se_r, se_c, 'S')
 			if nwm+nem+swm+sem != 2 {
 				continue
 			}
