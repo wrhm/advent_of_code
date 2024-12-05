@@ -33,9 +33,7 @@ func gridHasCharAtPos(lines *([]string), r int, c int, b byte) int {
 
 func day04partOne(contents string) {
 	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
 	lines := strings.Split(contents, "\n")
-	fmt.Printf("and %d lines of length %d\n", len(lines), len(lines[0]))
 	w := len(lines[0])
 	h := len(lines)
 	total := 0
@@ -43,7 +41,6 @@ func day04partOne(contents string) {
 		for c := 0; c < w; c++ {
 			for dr := -1; dr <= 1; dr++ {
 				for dc := -1; dc <= 1; dc++ {
-					// fmt.Printf("r=%d,c=%d,dr=%d,dc=%d : ", r, c, dr, dc)
 					x_r, x_c := r+0*dr, c+0*dc
 					has_x := gridHasCharAtPos(&lines, x_r, x_c, 'X')
 					m_r, m_c := r+1*dr, c+1*dc
@@ -52,7 +49,6 @@ func day04partOne(contents string) {
 					has_a := gridHasCharAtPos(&lines, a_r, a_c, 'A')
 					s_r, s_c := r+3*dr, c+3*dc
 					has_s := gridHasCharAtPos(&lines, s_r, s_c, 'S')
-					// fmt.Println(has_x, has_m, has_a, has_s)
 					if has_x+has_m+has_a+has_s == 4 {
 						total++
 					}
@@ -60,24 +56,15 @@ func day04partOne(contents string) {
 			}
 		}
 	}
-	var ret = total
-	LogPartOneResult(ret, start)
+	LogPartOneResult(total, start)
 }
 
 func day04partTwo(contents string) {
 	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
 	lines := strings.Split(contents, "\n")
-	fmt.Printf("and %d lines of length %d\n", len(lines), len(lines[0]))
 	w := len(lines[0])
 	h := len(lines)
 	total := 0
-	// a_locs :=make(map[(int,int)]int)
-	// a_locs := []
-	// var a_locs [](int,int)
-	// var used [w][h]int
-	// fmt.Println(used)
-
 	for r := 0; r < h; r++ {
 		for c := 0; c < w; c++ {
 			a_r, a_c := r, c
@@ -109,15 +96,10 @@ func day04partTwo(contents string) {
 			if (nws+ses == 2) || (nes+sws == 2) {
 				continue
 			}
-			fmt.Printf("found X-MAS with A at r=%d,c=%d\n", a_r, a_c)
 			total++
-			// if has_x && has_m && has_a && has_s {
-			// 	total++
-			// }
 		}
 	}
-	var ret = total
-	LogPartTwoResult(ret, start)
+	LogPartTwoResult(total, start)
 }
 
 func day04main() {
