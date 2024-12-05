@@ -22,6 +22,15 @@ func inBounds(x int, lo int, hi int) bool {
 	return lo <= x && x <= hi
 }
 
+func gridHasCharAtPos(lines *([]string), r int, c int, b byte) int {
+	w := len((*lines)[0])
+	h := len(*lines)
+	if inBounds(r, 0, h-1) && inBounds(c, 0, w-1) && (*lines)[r][c] == b {
+		return 1
+	}
+	return 0
+}
+
 func day04partOne(contents string) {
 	start := time.Now()
 	fmt.Printf("contents has size %d\n", len(contents))
@@ -30,29 +39,21 @@ func day04partOne(contents string) {
 	w := len(lines[0])
 	h := len(lines)
 	total := 0
-	// dirs = {{-1,-1},{-1,0},{}}
 	for r := 0; r < h; r++ {
 		for c := 0; c < w; c++ {
 			for dr := -1; dr <= 1; dr++ {
 				for dc := -1; dc <= 1; dc++ {
 					// fmt.Printf("r=%d,c=%d,dr=%d,dc=%d : ", r, c, dr, dc)
-					// mr := r + dr
-					// mc := c + dc
 					x_r, x_c := r+0*dr, c+0*dc
-					// has_x := x_r >= 0 && x_r < h && x_c >= 0 && x_c < w && lines[x_r][x_c] == 'X'
-					has_x := inBounds(x_r, 0, h-1) && inBounds(x_c, 0, w-1) && lines[x_r][x_c] == 'X'
-					// fmt.Println(has_x)
+					has_x := gridHasCharAtPos(&lines, x_r, x_c, 'X')
 					m_r, m_c := r+1*dr, c+1*dc
-					has_m := inBounds(m_r, 0, h-1) && inBounds(m_c, 0, w-1) && lines[m_r][m_c] == 'M'
-					// fmt.Println(has_m)
+					has_m := gridHasCharAtPos(&lines, m_r, m_c, 'M')
 					a_r, a_c := r+2*dr, c+2*dc
-					has_a := inBounds(a_r, 0, h-1) && inBounds(a_c, 0, w-1) && lines[a_r][a_c] == 'A'
-					// fmt.Println(has_a)
+					has_a := gridHasCharAtPos(&lines, a_r, a_c, 'A')
 					s_r, s_c := r+3*dr, c+3*dc
-					has_s := inBounds(s_r, 0, h-1) && inBounds(s_c, 0, w-1) && lines[s_r][s_c] == 'S'
-					// fmt.Println(has_s)
+					has_s := gridHasCharAtPos(&lines, s_r, s_c, 'S')
 					// fmt.Println(has_x, has_m, has_a, has_s)
-					if has_x && has_m && has_a && has_s {
+					if has_x+has_m+has_a+has_s == 4 {
 						total++
 					}
 				}
@@ -68,7 +69,54 @@ func day04partTwo(contents string) {
 	fmt.Printf("contents has size %d\n", len(contents))
 	lines := strings.Split(contents, "\n")
 	fmt.Printf("and %d lines of length %d\n", len(lines), len(lines[0]))
-	var ret = 0
+	w := len(lines[0])
+	h := len(lines)
+	total := 0
+	// a_locs :=make(map[(int,int)]int)
+	// a_locs := []
+	// var a_locs [](int,int)
+	// var used [w][h]int
+	// fmt.Println(used)
+
+	for r := 0; r < h; r++ {
+		for c := 0; c < w; c++ {
+			a_r, a_c := r, c
+			has_a := gridHasCharAtPos(&lines, a_r, a_c, 'A')
+			if has_a == 0 {
+				continue
+			}
+			nw_r, nw_c := r-1, c-1
+			ne_r, ne_c := r-1, c+1
+			sw_r, sw_c := r+1, c-1
+			se_r, se_c := r+1, c+1
+			nwm := gridHasCharAtPos(&lines, nw_r, nw_c, 'M')
+			nws := gridHasCharAtPos(&lines, nw_r, nw_c, 'S')
+			nem := gridHasCharAtPos(&lines, ne_r, ne_c, 'M')
+			nes := gridHasCharAtPos(&lines, ne_r, ne_c, 'S')
+			swm := gridHasCharAtPos(&lines, sw_r, sw_c, 'M')
+			sws := gridHasCharAtPos(&lines, sw_r, sw_c, 'S')
+			sem := gridHasCharAtPos(&lines, se_r, se_c, 'M')
+			ses := gridHasCharAtPos(&lines, se_r, se_c, 'S')
+			if nwm+nem+swm+sem != 2 {
+				continue
+			}
+			if nws+nes+sws+ses != 2 {
+				continue
+			}
+			if (nwm+sem == 2) || (nem+swm == 2) {
+				continue
+			}
+			if (nws+ses == 2) || (nes+sws == 2) {
+				continue
+			}
+			fmt.Printf("found X-MAS with A at r=%d,c=%d\n", a_r, a_c)
+			total++
+			// if has_x && has_m && has_a && has_s {
+			// 	total++
+			// }
+		}
+	}
+	var ret = total
 	LogPartTwoResult(ret, start)
 }
 
