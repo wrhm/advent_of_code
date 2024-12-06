@@ -87,13 +87,10 @@ func updateIsCorrectlyOrdered(rules *([][]int), update *([]int)) bool {
 
 func day05partOne(contents string) {
 	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
 	lines := strings.Split(contents, "\n")
-	// fmt.Println(parseRulesAndUpdates(lines))
 	rules, updates := parseRulesAndUpdates(lines)
 	var total = 0
 	for _, upd := range updates {
-		// fmt.Printf("%v,%v\n", upd, updateIsCorrectlyOrdered(&rules, &upd))
 		if updateIsCorrectlyOrdered(&rules, &upd) {
 			nu := len(upd)
 			total += upd[nu/2]
@@ -112,11 +109,11 @@ func indexOf(list []int, val int) int {
 }
 
 func sortUpdateByRules(rules *([][]int), update []int) []int {
-	// var upd []int = update
 	var upd []int
 	for _, v := range update {
 		upd = append(upd, v)
 	}
+	// Bubble sort
 	for j := 0; j < len(upd); j++ {
 		for _, rule := range *rules {
 			a := rule[0]
@@ -124,10 +121,8 @@ func sortUpdateByRules(rules *([][]int), update []int) []int {
 			ioa := indexOf(upd, a)
 			iob := indexOf(upd, b)
 			if ioa != -1 && iob != -1 && ioa > iob {
-				fmt.Printf("rule (%d,%d) requires %d at %d and %d at %d to swap\n", a, b, a, ioa, b, iob)
 				upd[ioa] = b
 				upd[iob] = a
-				fmt.Println(upd)
 			}
 		}
 	}
@@ -136,20 +131,13 @@ func sortUpdateByRules(rules *([][]int), update []int) []int {
 
 func day05partTwo(contents string) {
 	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
 	lines := strings.Split(contents, "\n")
-	// fmt.Println(parseRulesAndUpdates(lines))
 	rules, updates := parseRulesAndUpdates(lines)
 	var total = 0
 	for _, upd := range updates {
-		// fmt.Printf("%v,%v\n", upd, updateIsCorrectlyOrdered(&rules, &upd))
 		if !updateIsCorrectlyOrdered(&rules, &upd) {
-			fmt.Println(upd)
 			std_upd := sortUpdateByRules(&rules, upd)
-			fmt.Println(std_upd)
-			fmt.Printf("adding %d\n", std_upd[len(upd)/2])
 			total += std_upd[len(upd)/2]
-			fmt.Println(upd)
 		}
 	}
 	LogPartTwoResult(total, start)
