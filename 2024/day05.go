@@ -102,11 +102,57 @@ func day05partOne(contents string) {
 	LogPartOneResult(total, start)
 }
 
+func indexOf(list []int, val int) int {
+	for i, v := range list {
+		if v == val {
+			return i
+		}
+	}
+	return -1
+}
+
+func sortUpdateByRules(rules *([][]int), update []int) []int {
+	// var upd []int = update
+	var upd []int
+	for _, v := range update {
+		upd = append(upd, v)
+	}
+	for j := 0; j < len(upd); j++ {
+		for _, rule := range *rules {
+			a := rule[0]
+			b := rule[1]
+			ioa := indexOf(upd, a)
+			iob := indexOf(upd, b)
+			if ioa != -1 && iob != -1 && ioa > iob {
+				fmt.Printf("rule (%d,%d) requires %d at %d and %d at %d to swap\n", a, b, a, ioa, b, iob)
+				upd[ioa] = b
+				upd[iob] = a
+				fmt.Println(upd)
+			}
+		}
+	}
+	return upd
+}
+
 func day05partTwo(contents string) {
 	start := time.Now()
 	fmt.Printf("contents has size %d\n", len(contents))
-	var ret = 0
-	LogPartTwoResult(ret, start)
+	lines := strings.Split(contents, "\n")
+	// fmt.Println(parseRulesAndUpdates(lines))
+	rules, updates := parseRulesAndUpdates(lines)
+	var total = 0
+	for _, upd := range updates {
+		// fmt.Printf("%v,%v\n", upd, updateIsCorrectlyOrdered(&rules, &upd))
+		if !updateIsCorrectlyOrdered(&rules, &upd) {
+			fmt.Println(upd)
+			std_upd := sortUpdateByRules(&rules, upd)
+			fmt.Println(std_upd)
+			fmt.Printf("adding %d\n", std_upd[len(upd)/2])
+			total += std_upd[len(upd)/2]
+			fmt.Println(upd)
+		}
+	}
+	LogPartTwoResult(total, start)
 }
 
 func day05main() {
