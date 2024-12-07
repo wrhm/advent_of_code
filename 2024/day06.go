@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -19,7 +18,7 @@ const day06example = `....#.....
 #.........
 ......#...`
 
-func findCaret(lines []string) (int, int) {
+func findCaret(lines [][]byte) (int, int) {
 	h := len(lines)
 	w := len(lines[0])
 	for r := 0; r < h; r++ {
@@ -32,53 +31,58 @@ func findCaret(lines []string) (int, int) {
 	return -1, -1
 }
 
-func day06partOne(contents string) {
-	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
-	lines := strings.Split(contents, "\n")
+func strListAs2dBytes(lines []string) [][]byte {
+	var ret [][]byte
 	h := len(lines)
-	w := len(lines[0])
-	r, c := findCaret(lines)
-	// dirs:=make([][]int,4)
-	var img [][]byte
 	for i := 0; i < h; i++ {
-		var row []byte
-		for j := 0; j < w; j++ {
-			row = append(row, lines[i][j])
-		}
-		img = append(img, row)
+		ret = append(ret, []byte(lines[i]))
 	}
+	return ret
+}
+
+func printStrList(lines []string) {
+	for _, row := range lines {
+		fmt.Println(string(row))
+	}
+}
+
+func print2dBytesList(lines [][]byte) {
+	for _, row := range lines {
+		fmt.Println(string(row))
+	}
+}
+
+// returns: (nkeys,inf_loop)
+func simulateGuard(grid [][]byte) (int, bool) {
+
+	// lines := strings.Split(contents, "\n")
+	h := len(grid)
+	w := len(grid[0])
+	r, c := findCaret(grid)
+	// img := strListAs2dBytes(grid)
+	img := grid[:]
 	dirs := [][]int{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}
 	pointers := "^>v<"
 	di := 0
 	m := make(map[string]bool)
+	inf_loop := true
 	for {
-
-		fmt.Println(r, c)
+		// fmt.Println(r, c)
 		k := strconv.Itoa(r) + ":" + strconv.Itoa(c)
 		m[k] = true
 		nextr := r + dirs[di][0]
 		nextc := c + dirs[di][1]
 		if !inBounds(nextr, 0, h-1) || !inBounds(nextc, 0, w-1) {
+			inf_loop = false
 			break
 		}
-		// if lines[nextr][nextc] == '.' {
-		// 	fmt.Println("going straight in dir", dirs[di])
-		// 	img[r][c] = 'X'
-		// 	r = nextr
-		// 	c = nextc
-		// } else {
-		// 	fmt.Println("turning right because", nextr, nextc, "is", lines[nextr][nextc])
-		// 	di = (di + 1) % 4
-		// 	img[r][c] = pointers[di]
-		// }
-		if lines[nextr][nextc] == '#' {
-			fmt.Println("turning right because", nextr, nextc, "is", lines[nextr][nextc])
+		if grid[nextr][nextc] == '#' {
+			// fmt.Println("turning right because", nextr, nextc, "is", grid[nextr][nextc])
 			di = (di + 1) % 4
 			img[r][c] = pointers[di]
 
 		} else {
-			fmt.Println("going straight in dir", dirs[di])
+			// fmt.Println("going straight in dir", dirs[di])
 			img[r][c] = 'X'
 			r = nextr
 			c = nextc
@@ -86,16 +90,22 @@ func day06partOne(contents string) {
 	}
 	fmt.Println("exited at", r, c)
 	nkeys := 0
-	// for _ := range m {
 	for i := 0; i < len(m); i++ {
 		nkeys++
 	}
 	fmt.Println("nkeys", nkeys)
-	for _, row := range img {
-		// fmt.Println(row)
-		fmt.Println(string(row))
-	}
+	print2dBytesList(img)
+	// return r, c, nkeys
+	return nkeys, inf_loop
+}
 
+func day06partOne(contents string) {
+	start := time.Now()
+	fmt.Printf("contents has size %d\n", len(contents))
+	lines := strings.Split(contents, "\n")
+
+	img := strListAs2dBytes(lines)
+	nkeys, _ := simulateGuard(img)
 	var ret = nkeys
 	LogPartOneResult(ret, start)
 }
@@ -112,10 +122,10 @@ func day06main() {
 	fmt.Println("Example:")
 	day06partOne(day06example)
 	day06partTwo(day06example)
-	data, _ := os.ReadFile("inputs/day06.txt")
-	content := string(data)
-	fmt.Println("\nFrom file:")
-	day06partOne(content)
-	day06partTwo(content)
+	// data, _ := os.ReadFile("inputs/day06.txt")
+	// content := string(data)
+	// fmt.Println("\nFrom file:")
+	// day06partOne(content)
+	// day06partTwo(content)
 	LogTimingForDay(start)
 }
