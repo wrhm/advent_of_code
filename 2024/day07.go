@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -17,18 +18,20 @@ const day07example = `190: 10 19
 21037: 9 7 18 13
 292: 11 6 16 20`
 
-func opStrings(n int) []string {
+func opStrings(n int, base_ops []string) []string {
 	if n == 0 {
 		return []string{}
 	}
 	if n == 1 {
-		return []string{"+", "*"}
+		return base_ops
 	}
-	rec := opStrings(n - 1)
+	rec := opStrings(n-1, base_ops)
 	var ret []string
 	for _, r := range rec {
-		ret = append(ret, r+"+")
-		ret = append(ret, r+"*")
+		for _, c := range base_ops {
+			ret = append(ret, r+c)
+		}
+
 	}
 	return ret
 }
@@ -39,40 +42,27 @@ func evalNumsAndOpsInOrder(nums []int, ops string) int {
 		x := nums[i+1]
 		if o == '+' {
 			ret += x
-		} else {
+		} else if o == '*' {
 			ret *= x
+		} else {
+			// concat
+			// strconv.Itoa(r)
+			s := strconv.Itoa(ret) + strconv.Itoa(x)
+			ret, _ = strconv.Atoi(s)
 		}
 	}
 	return ret
 }
 
-// func testEvalNumsAndOpsInOrder() {
-// 	v1 := evalNumsAndOpsInOrder([]int{1, 2}, "+")
-// 	fmt.Println("EXPECTING", v1, "=", 3)
-// 	v2 := evalNumsAndOpsInOrder([]int{1, 2}, "*")
-// 	fmt.Println("EXPECTING", v2, "=", 2)
-// 	v3 := evalNumsAndOpsInOrder([]int{3, 0, 5}, "*+")
-// 	fmt.Println("EXPECTING", v3, "=", 5)
-// 	v4 := evalNumsAndOpsInOrder([]int{3, 7, 5}, "+*")
-// 	fmt.Println("EXPECTING", v4, "=", 50)
-// }
-
-func day07partOne(contents string) {
-	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
-	lines := strings.Split(contents, "\n")
-
+func sumValidBridgeEqs(lines []string, base_ops []string) int {
 	var ret = 0
-	for _, line := range lines {
+	for i, line := range lines {
+		fmt.Println("case", i, "of", len(lines))
 		nums := parseAllNums(line)
 		n_ops := len(nums) - 2
-		// fmt.Println(line, nums, "has", len(nums)-1, "inputs and needs", n_ops, "ops")
-		ops := opStrings(n_ops)
-		// fmt.Println(n_ops, ops)
+		ops := opStrings(n_ops, base_ops)
 		has_sol := false
 		for _, op := range ops {
-			// fmt.Println(nums[0], nums[1:], evalNumsAndOpsInOrder(nums[1:],
-			// op))
 			if evalNumsAndOpsInOrder(nums[1:], op) == nums[0] {
 				has_sol = true
 				break
@@ -82,18 +72,32 @@ func day07partOne(contents string) {
 			ret += nums[0]
 		}
 	}
-	// testEvalNumsAndOpsInOrder()
-	// fmt.Println("all tests passed")
-	// for i := 0; i < 5; i++ {
-	// 	fmt.Println(i, opStrings(i))
-	// }
+	return ret
+}
+
+func day07partOne(contents string) {
+	start := time.Now()
+	fmt.Printf("contents has size %d\n", len(contents))
+	lines := strings.Split(contents, "\n")
+	var ret = sumValidBridgeEqs(lines, []string{"+", "*"})
 	LogPartOneResult(ret, start)
+}
+
+func testEvalNumsAndOpsInOrder() {
+	fmt.Println("EXPECTING", evalNumsAndOpsInOrder([]int{1, 2}, "+"), "=", 3)
+	fmt.Println("EXPECTING", evalNumsAndOpsInOrder([]int{1, 2}, "*"), "=", 2)
+	fmt.Println("EXPECTING", evalNumsAndOpsInOrder([]int{3, 0, 5}, "*+"), "=", 5)
+	fmt.Println("EXPECTING", evalNumsAndOpsInOrder([]int{3, 7, 5}, "+*"), "=", 50)
+	fmt.Println("EXPECTING", evalNumsAndOpsInOrder([]int{3, 7}, "C"), "=", 37)
+	fmt.Println("EXPECTING", evalNumsAndOpsInOrder([]int{2, 5, 4}, "C*"), "=", 100)
 }
 
 func day07partTwo(contents string) {
 	start := time.Now()
 	fmt.Printf("contents has size %d\n", len(contents))
-	var ret = 0
+	// testEvalNumsAndOpsInOrder()
+	lines := strings.Split(contents, "\n")
+	var ret = sumValidBridgeEqs(lines, []string{"+", "*", "C"})
 	LogPartTwoResult(ret, start)
 }
 
