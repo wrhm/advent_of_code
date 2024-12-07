@@ -20,8 +20,10 @@ func main() {
 	// day04main()
 	// fmt.Println("\n== DAY 05 ==")
 	// day05main()
-	fmt.Println("\n== DAY 06 ==")
-	day06main()
+	// fmt.Println("\n== DAY 06 ==")
+	// day06main()
+	fmt.Println("\n== DAY 07 ==")
+	day07main()
 	elapsed := time.Since(start)
 	fmt.Println("\ngrand total time all days: ", elapsed)
 }
