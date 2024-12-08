@@ -8,6 +8,9 @@ import (
 	"time"
 )
 
+// TODO: use maps of locations of #/O/X/^
+// to avoid string copies
+
 const day06example = `....#.....
 .........#
 ..........

@@ -18,6 +18,7 @@ const day07example = `190: 10 19
 21037: 9 7 18 13
 292: 11 6 16 20`
 
+// TODO: add memoization
 func opStrings(n int, base_ops []string) []string {
 	if n == 0 {
 		return []string{}
