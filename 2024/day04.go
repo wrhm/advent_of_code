@@ -18,19 +18,6 @@ SAXAMASAAA
 MAMMMXMMMM
 MXMXAXMASX`
 
-func inBounds(x int, lo int, hi int) bool {
-	return lo <= x && x <= hi
-}
-
-func gridHasByteAtPos(lines *([]string), r int, c int, b byte) int {
-	w := len((*lines)[0])
-	h := len(*lines)
-	if inBounds(r, 0, h-1) && inBounds(c, 0, w-1) && (*lines)[r][c] == b {
-		return 1
-	}
-	return 0
-}
-
 func day04partOne(contents string) {
 	// For all starting positions in the grid, search for the string in all 8
 	// possible directions.

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -21,28 +20,6 @@ const day08example = `............
 ............
 ............`
 
-type GridPoint struct {
-	r int
-	c int
-}
-
-func GP(r int, c int) *GridPoint {
-	return &GridPoint{r, c}
-}
-
-func make2dPointSet() map[string]bool {
-	return make(map[string]bool)
-}
-
-func insertInto2dPointSet(ps *(map[string]bool), r int, c int) {
-	pk := strconv.Itoa(r) + ":" + strconv.Itoa(c)
-	(*ps)[pk] = true
-}
-
-func antinode(r1 int, c1 int, r2 int, c2 int) (int, int) {
-	return r2 + (r2 - r1), c2 + (c2 - c1)
-}
-
 // from byte to slice of points
 func gridPointsWithChar(bs *([][]byte)) map[byte][]*GridPoint {
 	h := len(*bs)
@@ -58,9 +35,12 @@ func gridPointsWithChar(bs *([][]byte)) map[byte][]*GridPoint {
 	return points_per_ch
 }
 
+func antinode(r1 int, c1 int, r2 int, c2 int) (int, int) {
+	return r2 + (r2 - r1), c2 + (c2 - c1)
+}
+
 func day08partOne(contents string) {
 	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
 	lines := strings.Split(contents, "\n")
 	bs := strListAs2dBytes(lines)
 	h := len(bs)
@@ -101,7 +81,6 @@ func collinear(r1 int, c1 int, r2 int, c2 int, r3 int, c3 int) bool {
 
 func day08partTwo(contents string) {
 	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
 	lines := strings.Split(contents, "\n")
 	bs := strListAs2dBytes(lines)
 	h := len(bs)

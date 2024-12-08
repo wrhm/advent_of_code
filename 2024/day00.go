@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -11,14 +12,16 @@ const day00example = `EXAMPLE CASE HERE
 
 func day00partOne(contents string) {
 	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
+	lines := strings.Split(contents, "\n")
+	fmt.Printf("lines has size %d\n", len(lines))
 	var ret = 0
 	LogPartOneResult(ret, start)
 }
 
 func day00partTwo(contents string) {
 	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
+	lines := strings.Split(contents, "\n")
+	fmt.Printf("lines has size %d\n", len(lines))
 	var ret = 0
 	LogPartTwoResult(ret, start)
 }

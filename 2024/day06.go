@@ -35,27 +35,6 @@ func findCaret(lines [][]byte) (int, int) {
 	return -1, -1
 }
 
-func strListAs2dBytes(lines []string) [][]byte {
-	var ret [][]byte
-	h := len(lines)
-	for i := 0; i < h; i++ {
-		ret = append(ret, []byte(lines[i]))
-	}
-	return ret
-}
-
-func printStrList(lines []string) {
-	for _, row := range lines {
-		fmt.Println(string(row))
-	}
-}
-
-func print2dBytesList(lines [][]byte) {
-	for _, row := range lines {
-		fmt.Println(string(row))
-	}
-}
-
 // returns: (nkeys,inf_loop)
 func simulateGuard(grid [][]byte) (int, bool) {
 	h := len(grid)
@@ -65,6 +44,8 @@ func simulateGuard(grid [][]byte) (int, bool) {
 	dirs := [][]int{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}
 	pointers := "^>v<"
 	di := 0
+	// TODO: refactor p_m and pd_m to use make2dPointSet() and
+	// insertInto2dPointSet() like day08.go.
 	p_m := make(map[string]bool)
 	// store position and direction, to detect loops
 	pd_m := make(map[string]bool)
@@ -101,7 +82,6 @@ func simulateGuard(grid [][]byte) (int, bool) {
 
 func day06partOne(contents string) {
 	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
 	lines := strings.Split(contents, "\n")
 	img := strListAs2dBytes(lines)
 	nkeys, _ := simulateGuard(img)
@@ -123,7 +103,6 @@ func deepCopy2dBytes(inp [][]byte) [][]byte {
 
 func day06partTwo(contents string) {
 	start := time.Now()
-	fmt.Printf("contents has size %d\n", len(contents))
 	lines := strings.Split(contents, "\n")
 	img := strListAs2dBytes(lines)
 	h := len(lines)

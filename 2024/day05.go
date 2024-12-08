@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"regexp"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -37,17 +35,6 @@ const day05example = `47|53
 75,97,47,61,53
 61,13,29
 97,13,75,29,47`
-
-func parseAllNums(s string) []int {
-	dr, _ := regexp.Compile(`\d+`)
-	num_strs := dr.FindAllString(s, -1)
-	var nums []int
-	for _, v := range num_strs {
-		i, _ := strconv.Atoi(v)
-		nums = append(nums, i)
-	}
-	return nums
-}
 
 func parseRulesAndUpdates(lines []string) ([][]int, [][]int) {
 	var rules [][]int
