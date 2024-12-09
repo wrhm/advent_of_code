@@ -24,8 +24,8 @@ func main() {
 	day06main()
 	fmt.Println("\n== DAY 07 ==")
 	day07main()
-	fmt.Println("\n== DAY 08 ==")
-	day08main()
+	// fmt.Println("\n== DAY 08 ==")
+	// day08main()
 	elapsed := time.Since(start)
 	fmt.Println("\ngrand total time all days: ", elapsed)
 }

@@ -18,7 +18,6 @@ const day07example = `190: 10 19
 21037: 9 7 18 13
 292: 11 6 16 20`
 
-// TODO: add memoization
 func opStrings(n int, base_ops []string) []string {
 	if n == 0 {
 		return []string{}
@@ -34,6 +33,41 @@ func opStrings(n int, base_ops []string) []string {
 		}
 
 	}
+	return ret
+}
+
+// memoized version of opStrings. Returns prior results
+// early if they are known.
+func opStringsMem(n int, base_ops []string, mem *(map[int][]string)) []string {
+	if n == 0 {
+		(*mem)[n] = []string{}
+		return (*mem)[n]
+	}
+	if n == 1 {
+		// return base_ops
+		(*mem)[n] = base_ops
+		return (*mem)[n]
+	}
+	x, prs := (*mem)[n]
+	if prs {
+		return x
+	}
+	var rec []string
+	xp, prsp := (*mem)[n-1]
+	if prsp {
+		rec = xp
+		(*mem)[n-1] = rec
+	} else {
+		rec = opStringsMem(n-1, base_ops, mem)
+	}
+	var ret []string
+	for _, r := range rec {
+		for _, c := range base_ops {
+			ret = append(ret, r+c)
+		}
+
+	}
+	(*mem)[n] = ret
 	return ret
 }
 
@@ -55,10 +89,12 @@ func evalNumsAndOpsInOrder(nums []int, ops string) int {
 
 func sumValidBridgeEqs(lines []string, base_ops []string) int {
 	var ret = 0
+	mem := make(map[int][]string)
 	for _, line := range lines {
 		nums := parseAllNums(line)
 		n_ops := len(nums) - 2
-		ops := opStrings(n_ops, base_ops)
+		// ops := opStrings(n_ops, base_ops)
+		ops := opStringsMem(n_ops, base_ops, &mem)
 		has_sol := false
 		for _, op := range ops {
 			if evalNumsAndOpsInOrder(nums[1:], op) == nums[0] {
