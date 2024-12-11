@@ -90,3 +90,13 @@ func insertInto2dPointSet(ps *(map[string]bool), r int, c int) {
 	pk := strconv.Itoa(r) + ":" + strconv.Itoa(c)
 	(*ps)[pk] = true
 }
+
+func digitRuneAsInt(r rune) int {
+	v, _ := strconv.Atoi(string(r))
+	return v
+}
+
+func digitByteAsInt(b byte) int {
+	v, _ := strconv.Atoi(string(b))
+	return v
+}

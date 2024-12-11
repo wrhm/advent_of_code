@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -11,16 +10,6 @@ import (
 const day09example = `2333133121414131402`
 
 // const day09example = `12345`
-
-func digitRuneAsInt(r rune) int {
-	v, _ := strconv.Atoi(string(r))
-	return v
-}
-
-func digitByteAsInt(b byte) int {
-	v, _ := strconv.Atoi(string(b))
-	return v
-}
 
 func diskMapToIntBlocks(dm string) []int {
 	var ret []int
