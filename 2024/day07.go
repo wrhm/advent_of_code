@@ -44,7 +44,6 @@ func opStringsMem(n int, base_ops []string, mem *(map[int][]string)) []string {
 		return (*mem)[n]
 	}
 	if n == 1 {
-		// return base_ops
 		(*mem)[n] = base_ops
 		return (*mem)[n]
 	}
@@ -93,7 +92,6 @@ func sumValidBridgeEqs(lines []string, base_ops []string) int {
 	for _, line := range lines {
 		nums := parseAllNums(line)
 		n_ops := len(nums) - 2
-		// ops := opStrings(n_ops, base_ops)
 		ops := opStringsMem(n_ops, base_ops, &mem)
 		has_sol := false
 		for _, op := range ops {
