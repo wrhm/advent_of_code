@@ -30,6 +30,14 @@ func digitByteAsInt(b byte) int {
 	return v
 }
 
+func bytesToInts(bs []byte) []int {
+	var ret []int
+	for _, v := range bs {
+		ret = append(ret, digitByteAsInt(v))
+	}
+	return ret
+}
+
 func diskMapToBlocks(dm string) string {
 	ret := ""
 	filenum := 0
@@ -46,6 +54,25 @@ func diskMapToBlocks(dm string) string {
 			part := nRepsOf(v, ".")
 			// fmt.Println("space", v, part)
 			ret += part
+		}
+	}
+	return ret
+}
+
+func diskMapToIntBlocks(dm string) []int {
+	var ret []int
+	filenum := 0
+	for i, r := range dm {
+		v := digitRuneAsInt(r)
+		if i%2 == 0 {
+			for j := 0; j < v; j++ {
+				ret = append(ret, filenum)
+			}
+			filenum++
+		} else {
+			for j := 0; j < v; j++ {
+				ret = append(ret, -1)
+			}
 		}
 	}
 	return ret
@@ -83,6 +110,35 @@ func indLastNon(bs []byte, b byte) int {
 	return ret
 }
 
+func indFirstInt(vs []int, v int) int {
+	for i := 0; i < len(vs); i++ {
+		if vs[i] == v {
+			return i
+		}
+	}
+	return -1
+}
+
+// func indLastInt(vs []int, v int) int {
+// 	ret := -1
+// 	for i := 0; i < len(vs); i++ {
+// 		if vs[i] == v {
+// 			ret = i
+// 		}
+// 	}
+// 	return ret
+// }
+
+func indLastNonInt(vs []int, v int) int {
+	ret := -1
+	for i := 0; i < len(vs); i++ {
+		if vs[i] != v {
+			ret = i
+		}
+	}
+	return ret
+}
+
 //	func moveLastBlock(s string) bool {
 //		bs := []byte(s)
 //
@@ -97,9 +153,19 @@ func moveLastBlock(bs *([]byte)) bool {
 		// fmt.Println("nothing to change")
 		return false
 	}
-	// fmt.Println("swapping", indf, indln)
 	(*bs)[indf] = (*bs)[indln]
 	(*bs)[indln] = '.'
+	return true
+}
+
+func moveLastIntBlock(vs *([]int)) bool {
+	indln := indLastNonInt(*vs, -1)
+	indf := indFirstInt(*vs, -1)
+	if indln < indf {
+		return false
+	}
+	(*vs)[indf] = (*vs)[indln]
+	(*vs)[indln] = -1
 	return true
 }
 
@@ -112,24 +178,46 @@ func filesystemChecksum(s string) int {
 	return ret
 }
 
+func filesystemIntsChecksum(vs *([]int)) int {
+	ret := 0
+	for i, v := range *vs {
+		if v != -1 {
+			ret += i * v
+		}
+	}
+	return ret
+}
+
 func day09partOne(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
 	fmt.Printf("lines has size %d\n", len(lines))
 	fmt.Println(lines[0])
-	dmtb := diskMapToBlocks(lines[0])
+	// dmtb := diskMapToBlocks(lines[0])
+	// fmt.Println(dmtb)
+	// bs := []byte(dmtb)
+	// fmt.Println(string(bs))
+	// for i := 0; i < 1e6; i++ {
+	// 	if !moveLastBlock(&bs) {
+	// 		break
+	// 	}
+	// 	fmt.Println("moving block", i, "among", len(bs), "bytes")
+	// 	// fmt.Println(string(bs))
+	// }
+	// fmt.Println("final", string(bs))
+	// var ret = filesystemChecksum(string(bs))
+
+	dmtb := diskMapToIntBlocks(lines[0])
 	fmt.Println(dmtb)
-	bs := []byte(dmtb)
-	fmt.Println(string(bs))
 	for i := 0; i < 1e6; i++ {
-		if !moveLastBlock(&bs) {
+		if !moveLastIntBlock(&dmtb) {
 			break
 		}
-		fmt.Println("moving block", i, "among", len(bs), "bytes")
-		// fmt.Println(string(bs))
+		fmt.Println("moving block", i, "among", len(dmtb), "bytes")
+		// fmt.Println(dmtb)
 	}
-	fmt.Println("final", string(bs))
-	var ret = filesystemChecksum(string(bs))
+	fmt.Println("final", dmtb)
+	var ret = filesystemIntsChecksum(&dmtb)
 	LogPartOneResult(ret, start)
 }
 
