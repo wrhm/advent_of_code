@@ -82,13 +82,7 @@ func BFSClimb(grid *[][]byte, start_gp *GridPoint) []*BFSClimbQElem {
 		}
 		r := qe.gp.r
 		c := qe.gp.c
-		// pk := strconv.Itoa(r) + ":" + strconv.Itoa(c)
-		// if visited[pk] {
-		// 	// fmt.Println("already saw", r, c)
-		// 	continue
-		// }
 		insertInto2dPointSet(&visited, qe.gp.r, qe.gp.c)
-		// fmt.Println("examining", qe.elev, *(qe.gp))
 		dirs := [][]int{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}
 		for i := 0; i < 4; i++ {
 			nextr := r + dirs[i][0]
@@ -96,9 +90,6 @@ func BFSClimb(grid *[][]byte, start_gp *GridPoint) []*BFSClimbQElem {
 			if inBounds(nextr, 0, h-1) && inBounds(nextc, 0, w-1) {
 				nexth := digitByteAsInt((*grid)[nextr][nextc])
 				if qe.elev+1 == nexth {
-					fmt.Println("adding to q:", nextr, nextc, "with h:",
-						nexth)
-					// hist := append(qe.hist, &GridPoint{nextr, nextc})
 					hist := []*GridPoint{}
 					for _, x := range qe.hist {
 						hist = append(hist, x)
@@ -115,26 +106,17 @@ func BFSClimb(grid *[][]byte, start_gp *GridPoint) []*BFSClimbQElem {
 func day10partOne(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
-	fmt.Printf("lines has size %d\n", len(lines))
 	bs := strListAs2dBytes(lines)
 	// h := len(bs)
 	// w := len(bs[0])
 	trailheads := findTrailheads(&bs)
 	var ret = 0
 	for _, t := range trailheads {
-		fmt.Println("trailhead", t)
 		summits := BFSClimb(&bs, t)
 		uniq := make2dPointSet()
-		// fmt.Println(summits)
 		for _, v := range summits {
-			// fmt.Println(v.r, v.c)
 			insertInto2dPointSet(&uniq, v.gp.r, v.gp.c)
-			fmt.Printf("\ncan reach %d,%d with path: ", v.gp.r, v.gp.c)
-			for _, x := range v.hist {
-				fmt.Printf("%d,%d ", x.r, x.c)
-			}
 		}
-		fmt.Println("\n", t.r, t.c, "can reach", len(uniq), "unique summits")
 		ret += len(uniq)
 	}
 	LogPartOneResult(ret, start)
@@ -143,31 +125,22 @@ func day10partOne(contents string) {
 func day10partTwo(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
-	fmt.Printf("lines has size %d\n", len(lines))
 	bs := strListAs2dBytes(lines)
 	// h := len(bs)
 	// w := len(bs[0])
 	trailheads := findTrailheads(&bs)
 	var ret = 0
 	for _, t := range trailheads {
-		fmt.Println("trailhead", t)
 		summits := BFSClimb(&bs, t)
 		uniq := make(map[string]bool)
-		// fmt.Println(summits)
 		for _, v := range summits {
-			// fmt.Println(v.r, v.c)
 			k := ""
-			// insertInto2dPointSet(&uniq, v.gp.r, v.gp.c)
-			fmt.Printf("\n%d,%d can reach %d,%d with path: ", t.r, t.c, v.gp.r, v.gp.c)
 			for _, x := range v.hist {
-				fmt.Printf("%d,%d ", x.r, x.c)
-				k += string(x.r) + "," + string(x.c) + " "
+				k += fmt.Sprintf("%d,%d ", x.r, x.c)
 			}
 			uniq[k] = true
 		}
-		// fmt.Println("\n", v.r, v.c, "can reach", len(uniq), "summits")
 		rating := len(uniq)
-		fmt.Println("\n", t.r, t.c, "has", rating, "unique summit paths")
 		ret += rating
 	}
 	LogPartTwoResult(ret, start)
