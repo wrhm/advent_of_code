@@ -129,18 +129,12 @@ func filesystemIntsChecksum(vs *([]int)) int {
 func day09partOne(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
-	fmt.Printf("lines has size %d\n", len(lines))
-	fmt.Println(lines[0])
 	dmtb := diskMapToIntBlocks(lines[0])
-	fmt.Println(dmtb)
 	for i := 0; i < 1e6; i++ {
 		if !moveLastIntBlock(&dmtb) {
 			break
 		}
-		fmt.Println("moving block", i, "among", len(dmtb), "bytes")
-		// fmt.Println(dmtb)
 	}
-	fmt.Println("final", dmtb)
 	var ret = filesystemIntsChecksum(&dmtb)
 	LogPartOneResult(ret, start)
 }
@@ -148,42 +142,21 @@ func day09partOne(contents string) {
 func day09partTwo(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
-	fmt.Printf("lines has size %d\n", len(lines))
-	fmt.Println(lines[0])
 	dmtb := diskMapToIntBlocks(lines[0])
-
-	fmt.Println(dmtb)
-	// fmt.Println(findBlockPosAndSize(&dmtb, 0))
-	// fmt.Println(findBlockPosAndSize(&dmtb, 2))
-	// fmt.Println(findBlockPosAndSize(&dmtb, 5))
-	// fmt.Println(findBlockPosAndSize(&dmtb, 9))
-	// fmt.Println("free block of size", 1, "at", indFirstFreeBlockOfSize(&dmtb, 1))
 	mxv := 0
 	for _, v := range dmtb {
 		if v > mxv {
 			mxv = v
 		}
 	}
-	fmt.Println("mxv", mxv)
-
-	// indFirstFreeBlockOfSize
-	// moveBlockOfSize()
 	for bi := mxv; bi >= 0; bi-- {
 		pos, sz := findBlockPosAndSize(&dmtb, bi)
 		iffb := indFirstFreeBlockOfSize(&dmtb, sz)
-		// fmt.Println(bi, pos, sz, iffb)
 		if iffb > -1 && iffb < pos {
-			fmt.Println("moving group of", bi, "s (size", sz, ") to", iffb)
 			moveBlockOfSize(&dmtb, sz, pos, iffb)
-		} else {
-			fmt.Println("not moving group of", bi, "s")
 		}
-		// fmt.Println(dmtb)
 	}
-	fmt.Println("final", dmtb)
 	var ret = filesystemIntsChecksum(&dmtb)
-
-	// var ret = 0
 	LogPartTwoResult(ret, start)
 }
 
