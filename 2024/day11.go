@@ -14,12 +14,12 @@ func makeIntCounter() map[int]int {
 	return make(map[int]int)
 }
 
-func incrementOrInsertInIntCounter(cts *(map[int]int), x int) {
+func incrementOrInsertInIntCounter(cts *(map[int]int), x int, inc int) {
 	prev, exist := (*cts)[x]
 	if exist {
-		(*cts)[x] = prev + 1
+		(*cts)[x] = prev + inc
 	} else {
-		(*cts)[x] = 1
+		(*cts)[x] = inc
 	}
 }
 
@@ -76,7 +76,7 @@ func day11partOne(contents string) {
 	cts := makeIntCounter()
 	initial := parseAllNums(lines[0])
 	for _, v := range initial {
-		incrementOrInsertInIntCounter(&cts, v)
+		incrementOrInsertInIntCounter(&cts, v, 1)
 	}
 	fmt.Println("initially")
 	fmt.Println(cts)
@@ -87,7 +87,7 @@ func day11partOne(contents string) {
 			for _, e := range ev {
 				for m := 0; m < cts[k]; m++ {
 					// fmt.Println("inserting", e)
-					incrementOrInsertInIntCounter(&next_cts, e)
+					incrementOrInsertInIntCounter(&next_cts, e, 1)
 				}
 			}
 		}
@@ -106,7 +106,30 @@ func day11partTwo(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
 	fmt.Printf("lines has size %d\n", len(lines))
+	cts := makeIntCounter()
+	initial := parseAllNums(lines[0])
+	for _, v := range initial {
+		incrementOrInsertInIntCounter(&cts, v, 1)
+	}
+	fmt.Println("initially")
+	fmt.Println(cts)
+	for i := 0; i < 75; i++ { //6
+		next_cts := makeIntCounter()
+		for k := range cts {
+			ev := evolveStone(k)
+			for _, e := range ev {
+				incrementOrInsertInIntCounter(&next_cts, e, cts[k])
+
+			}
+		}
+		cts = next_cts
+		fmt.Println("after", i+1, "blinks")
+		fmt.Println(cts)
+	}
 	var ret = 0
+	for _, v := range cts {
+		ret += v
+	}
 	LogPartTwoResult(ret, start)
 }
 
