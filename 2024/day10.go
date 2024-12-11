@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -15,6 +14,22 @@ import (
 // 7.....7
 // 8.....8
 // 9.....9`
+
+// const day10example = `.....0.
+// ..4321.
+// ..5..2.
+// ..6543.
+// ..7..4.
+// ..8765.
+// ..9....`
+
+// const day10example = `..90..9
+// ...1.98
+// ...2..7
+// 6543456
+// 765.987
+// 876....
+// 987....`
 
 const day10example = `89010123
 78121874
@@ -44,15 +59,18 @@ func findTrailheads(grid *[][]byte) []*GridPoint {
 type BFSClimbQElem struct {
 	elev int
 	gp   *GridPoint
+	hist []*GridPoint
 }
 
-func BFSClimb(grid *[][]byte, start_gp *GridPoint) []*GridPoint {
+func BFSClimb(grid *[][]byte, start_gp *GridPoint) []*BFSClimbQElem {
 	h := len(*grid)
 	w := len((*grid)[0])
 	var q []*BFSClimbQElem
-	q = append(q, &BFSClimbQElem{0, start_gp})
+	zhist := []*GridPoint{}
+	zhist = append(zhist, start_gp)
+	q = append(q, &BFSClimbQElem{0, start_gp, zhist})
 	visited := make2dPointSet()
-	var ret []*GridPoint
+	var ret []*BFSClimbQElem
 	for {
 		if len(q) == 0 {
 			break
@@ -60,15 +78,15 @@ func BFSClimb(grid *[][]byte, start_gp *GridPoint) []*GridPoint {
 		qe := q[0]
 		q = q[1:]
 		if qe.elev == 9 {
-			ret = append(ret, qe.gp)
+			ret = append(ret, qe)
 		}
 		r := qe.gp.r
 		c := qe.gp.c
-		pk := strconv.Itoa(r) + ":" + strconv.Itoa(c)
-		if visited[pk] {
-			// fmt.Println("already saw", r, c)
-			continue
-		}
+		// pk := strconv.Itoa(r) + ":" + strconv.Itoa(c)
+		// if visited[pk] {
+		// 	// fmt.Println("already saw", r, c)
+		// 	continue
+		// }
 		insertInto2dPointSet(&visited, qe.gp.r, qe.gp.c)
 		// fmt.Println("examining", qe.elev, *(qe.gp))
 		dirs := [][]int{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}
@@ -78,8 +96,15 @@ func BFSClimb(grid *[][]byte, start_gp *GridPoint) []*GridPoint {
 			if inBounds(nextr, 0, h-1) && inBounds(nextc, 0, w-1) {
 				nexth := digitByteAsInt((*grid)[nextr][nextc])
 				if qe.elev+1 == nexth {
-					// fmt.Println("adding to q:", nextr, nextc, "with h:", nexth)
-					q = append(q, &BFSClimbQElem{nexth, &GridPoint{nextr, nextc}})
+					fmt.Println("adding to q:", nextr, nextc, "with h:",
+						nexth)
+					// hist := append(qe.hist, &GridPoint{nextr, nextc})
+					hist := []*GridPoint{}
+					for _, x := range qe.hist {
+						hist = append(hist, x)
+					}
+					hist = append(hist, &GridPoint{nextr, nextc})
+					q = append(q, &BFSClimbQElem{nexth, &GridPoint{nextr, nextc}, hist})
 				}
 			}
 		}
@@ -96,16 +121,20 @@ func day10partOne(contents string) {
 	// w := len(bs[0])
 	trailheads := findTrailheads(&bs)
 	var ret = 0
-	for _, v := range trailheads {
-		fmt.Println("trailhead", v)
-		summits := BFSClimb(&bs, v)
+	for _, t := range trailheads {
+		fmt.Println("trailhead", t)
+		summits := BFSClimb(&bs, t)
 		uniq := make2dPointSet()
 		// fmt.Println(summits)
 		for _, v := range summits {
 			// fmt.Println(v.r, v.c)
-			insertInto2dPointSet(&uniq, v.r, v.c)
+			insertInto2dPointSet(&uniq, v.gp.r, v.gp.c)
+			fmt.Printf("\ncan reach %d,%d with path: ", v.gp.r, v.gp.c)
+			for _, x := range v.hist {
+				fmt.Printf("%d,%d ", x.r, x.c)
+			}
 		}
-		fmt.Println(v.r, v.c, "can reach", len(uniq), "summits")
+		fmt.Println("\n", t.r, t.c, "can reach", len(uniq), "unique summits")
 		ret += len(uniq)
 	}
 	LogPartOneResult(ret, start)
@@ -115,7 +144,32 @@ func day10partTwo(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
 	fmt.Printf("lines has size %d\n", len(lines))
+	bs := strListAs2dBytes(lines)
+	// h := len(bs)
+	// w := len(bs[0])
+	trailheads := findTrailheads(&bs)
 	var ret = 0
+	for _, t := range trailheads {
+		fmt.Println("trailhead", t)
+		summits := BFSClimb(&bs, t)
+		uniq := make(map[string]bool)
+		// fmt.Println(summits)
+		for _, v := range summits {
+			// fmt.Println(v.r, v.c)
+			k := ""
+			// insertInto2dPointSet(&uniq, v.gp.r, v.gp.c)
+			fmt.Printf("\n%d,%d can reach %d,%d with path: ", t.r, t.c, v.gp.r, v.gp.c)
+			for _, x := range v.hist {
+				fmt.Printf("%d,%d ", x.r, x.c)
+				k += string(x.r) + "," + string(x.c) + " "
+			}
+			uniq[k] = true
+		}
+		// fmt.Println("\n", v.r, v.c, "can reach", len(uniq), "summits")
+		rating := len(uniq)
+		fmt.Println("\n", t.r, t.c, "has", rating, "unique summit paths")
+		ret += rating
+	}
 	LogPartTwoResult(ret, start)
 }
 
@@ -123,11 +177,11 @@ func day10main() {
 	start := time.Now()
 	fmt.Println("Example:")
 	day10partOne(day10example)
-	// day10partTwo(day10example)
+	day10partTwo(day10example)
 	data, _ := os.ReadFile("inputs/day10.txt")
 	content := string(data)
 	fmt.Println("\nFrom file:")
 	day10partOne(content)
-	// day10partTwo(content)
+	day10partTwo(content)
 	LogTimingForDay(start)
 }
