@@ -107,8 +107,6 @@ func day10partOne(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
 	bs := strListAs2dBytes(lines)
-	// h := len(bs)
-	// w := len(bs[0])
 	trailheads := findTrailheads(&bs)
 	var ret = 0
 	for _, t := range trailheads {
@@ -126,8 +124,6 @@ func day10partTwo(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
 	bs := strListAs2dBytes(lines)
-	// h := len(bs)
-	// w := len(bs[0])
 	trailheads := findTrailheads(&bs)
 	var ret = 0
 	for _, t := range trailheads {
