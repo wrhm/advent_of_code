@@ -23,18 +23,9 @@ func incrementOrInsertInIntCounter(cts *(map[int]int), x int, inc int) {
 	}
 }
 
-func decrementInIntCounter(cts *(map[int]int), x int) {
-	prev, exist := (*cts)[x]
-	if exist {
-		(*cts)[x] = prev - 1
-	}
-	// delete key if count is 0?
-}
-
 func splitInHalfByDigits(n int) (int, int) {
 	s := strconv.Itoa(n)
 	nc := len(s) / 2
-	// fmt.Println(s, nc, s[:nc], s[nc:])
 	a, _ := strconv.Atoi(s[:nc])
 	b, _ := strconv.Atoi(s[nc:])
 	return a, b
@@ -55,45 +46,22 @@ func evolveStone(n int) []int {
 func day11partOne(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
-	fmt.Printf("lines has size %d\n", len(lines))
-	// cts := makeIntCounter()
-	// incrementOrInsertInIntCounter(&cts, 1)
-	// incrementOrInsertInIntCounter(&cts, 0)
-	// incrementOrInsertInIntCounter(&cts, 1)
-	// incrementOrInsertInIntCounter(&cts, 1)
-	// fmt.Println(cts)
-	// decrementInIntCounter(&cts, 1)
-	// fmt.Println(cts)
-	// decrementInIntCounter(&cts, 0)
-	// fmt.Println(cts)
-	// a, b := splitInHalfByDigits(1234)
-	// fmt.Println(a, b)
-	// fmt.Println(0, evolveStone(0))
-	// fmt.Println(1, evolveStone(1))
-	// fmt.Println(10, evolveStone(10))
-	// fmt.Println(99, evolveStone(99))
-	// fmt.Println(999, evolveStone(999))
 	cts := makeIntCounter()
 	initial := parseAllNums(lines[0])
 	for _, v := range initial {
 		incrementOrInsertInIntCounter(&cts, v, 1)
 	}
-	fmt.Println("initially")
-	fmt.Println(cts)
 	for i := 0; i < 25; i++ { //6
 		next_cts := makeIntCounter()
 		for k := range cts {
 			ev := evolveStone(k)
 			for _, e := range ev {
 				for m := 0; m < cts[k]; m++ {
-					// fmt.Println("inserting", e)
 					incrementOrInsertInIntCounter(&next_cts, e, 1)
 				}
 			}
 		}
 		cts = next_cts
-		fmt.Println("after", i+1, "blinks")
-		fmt.Println(cts)
 	}
 	var ret = 0
 	for _, v := range cts {
@@ -105,14 +73,11 @@ func day11partOne(contents string) {
 func day11partTwo(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
-	fmt.Printf("lines has size %d\n", len(lines))
 	cts := makeIntCounter()
 	initial := parseAllNums(lines[0])
 	for _, v := range initial {
 		incrementOrInsertInIntCounter(&cts, v, 1)
 	}
-	fmt.Println("initially")
-	fmt.Println(cts)
 	for i := 0; i < 75; i++ { //6
 		next_cts := makeIntCounter()
 		for k := range cts {
@@ -123,8 +88,6 @@ func day11partTwo(contents string) {
 			}
 		}
 		cts = next_cts
-		fmt.Println("after", i+1, "blinks")
-		fmt.Println(cts)
 	}
 	var ret = 0
 	for _, v := range cts {
