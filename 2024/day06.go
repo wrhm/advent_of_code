@@ -101,6 +101,8 @@ func deepCopy2dBytes(inp [][]byte) [][]byte {
 	return out
 }
 
+// TODO: speed this up by considering only the positions that form
+// a diagonal rectangle of "#"s that form a loop.
 func day06partTwo(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
