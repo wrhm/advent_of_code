@@ -5,33 +5,51 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"time"
 )
 
+type DayFn func() time.Duration
+
+type DayAndFn struct {
+	day int
+	f   DayFn
+}
+
+type DayTiming struct {
+	day     int
+	elapsed time.Duration
+}
+
 func main() {
 	start := time.Now()
-	fmt.Println("\n== DAY 01 ==")
-	day01main()
-	fmt.Println("\n== DAY 02 ==")
-	day02main()
-	fmt.Println("\n== DAY 03 ==")
-	day03main()
-	fmt.Println("\n== DAY 04 ==")
-	day04main()
-	fmt.Println("\n== DAY 05 ==")
-	day05main()
-	fmt.Println("\n== DAY 06 ==")
-	day06main()
-	fmt.Println("\n== DAY 07 ==")
-	day07main()
-	fmt.Println("\n== DAY 08 ==")
-	day08main()
-	fmt.Println("\n== DAY 09 ==")
-	day09main()
-	fmt.Println("\n== DAY 10 ==")
-	day10main()
-	fmt.Println("\n== DAY 11 ==")
-	day11main()
+	fns := []DayAndFn{
+		{1, day01main},
+		{2, day02main},
+		{3, day03main},
+		{4, day04main},
+		{5, day05main},
+		{6, day06main},
+		{7, day07main},
+		{8, day08main},
+		{9, day09main},
+		{10, day10main},
+		{11, day11main},
+	}
+	timings := []DayTiming{}
+	for _, v := range fns {
+		fmt.Printf("\n== DAY %02d ==\n", v.day)
+		dt := DayTiming{v.day, v.f()}
+		LogTimingForDay(dt.elapsed)
+		timings = append(timings, dt)
+	}
+	sort.Slice(timings, func(i, j int) bool {
+		return timings[i].elapsed > timings[j].elapsed
+	})
 	elapsed := time.Since(start)
 	fmt.Println("\ngrand total time all days: ", elapsed)
+	fmt.Println("\nSorted, slowest first:")
+	for _, v := range timings {
+		fmt.Printf("Day %02d: %v\n", v.day, v.elapsed)
+	}
 }

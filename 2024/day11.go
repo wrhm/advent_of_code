@@ -96,7 +96,7 @@ func day11partTwo(contents string) {
 	LogPartTwoResult(ret, start)
 }
 
-func day11main() {
+func day11main() time.Duration {
 	start := time.Now()
 	fmt.Println("Example:")
 	day11partOne(day11example)
@@ -106,5 +106,6 @@ func day11main() {
 	fmt.Println("\nFrom file:")
 	day11partOne(content)
 	day11partTwo(content)
-	LogTimingForDay(start)
+	elapsed := time.Since(start)
+	return elapsed
 }

@@ -21,8 +21,7 @@ func LogPartTwoResult(v int, start time.Time) {
 	fmt.Println("part 2 time: ", elapsed)
 }
 
-func LogTimingForDay(start time.Time) {
-	elapsed := time.Since(start)
+func LogTimingForDay(elapsed time.Duration) {
 	fmt.Println("total time for day: ", elapsed)
 }
 
