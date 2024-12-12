@@ -36,13 +36,11 @@ func findCaret(lines [][]byte) (int, int) {
 }
 
 // returns: (nkeys,inf_loop)
-func simulateGuard(grid [][]byte) (int, bool) {
-	h := len(grid)
-	w := len(grid[0])
-	r, c := findCaret(grid)
-	img := grid[:]
+func simulateGuard(grid *([][]byte), o_r int, o_c int) (int, bool) {
+	h := len(*grid)
+	w := len((*grid)[0])
+	r, c := findCaret(*grid)
 	dirs := [][]int{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}
-	pointers := "^>v<"
 	di := 0
 	// TODO: refactor p_m and pd_m to use make2dPointSet() and
 	// insertInto2dPointSet() like day08.go.
@@ -65,12 +63,11 @@ func simulateGuard(grid [][]byte) (int, bool) {
 			inf_loop = false
 			break
 		}
-		next_char := grid[nextr][nextc]
-		if next_char == '#' || next_char == 'O' {
+		next_char := (*grid)[nextr][nextc]
+		if next_char == '#' ||
+			(o_r != -1 && o_c != -1 && nextr == o_r && nextc == o_c) {
 			di = (di + 1) % 4
-			img[r][c] = pointers[di]
 		} else {
-			img[r][c] = 'X'
 			r = nextr
 			c = nextc
 		}
@@ -84,7 +81,7 @@ func day06partOne(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
 	img := strListAs2dBytes(lines)
-	nkeys, _ := simulateGuard(img)
+	nkeys, _ := simulateGuard(&img, -1, -1)
 	var ret = nkeys
 	LogPartOneResult(ret, start)
 }
@@ -112,17 +109,13 @@ func day06partTwo(contents string) {
 	obst := 0
 	for r := 0; r < h; r++ {
 		for c := 0; c < w; c++ {
-			sim := deepCopy2dBytes(img)
-			if sim[r][c] != '.' {
+			if img[r][c] != '.' {
 				continue
 			}
-			sim[r][c] = 'O'
-			_, inf_loop := simulateGuard(sim)
+			_, inf_loop := simulateGuard(&img, r, c)
 			if inf_loop {
 				obst++
-				// fmt.Println("loop in case", r, c, "total:", obst, "rows:", h)
 			}
-			sim[r][c] = '.'
 		}
 	}
 	var ret = obst
