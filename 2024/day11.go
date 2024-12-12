@@ -78,7 +78,7 @@ func day11partTwo(contents string) {
 	for _, v := range initial {
 		incrementOrInsertInIntCounter(&cts, v, 1)
 	}
-	for i := 0; i < 75; i++ { //6
+	for i := 0; i < 75; i++ {
 		next_cts := makeIntCounter()
 		for k := range cts {
 			ev := evolveStone(k)

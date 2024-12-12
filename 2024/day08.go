@@ -63,7 +63,6 @@ func day08partOne(contents string) {
 			}
 		}
 	}
-	fmt.Println()
 	var ret = len(antinodes)
 	LogPartOneResult(ret, start)
 }
@@ -109,7 +108,6 @@ func day08partTwo(contents string) {
 			}
 		}
 	}
-	fmt.Println()
 	var ret = len(antinodes)
 	LogPartTwoResult(ret, start)
 }
