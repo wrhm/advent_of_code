@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -36,7 +35,7 @@ func findCaret(lines [][]byte) (int, int) {
 }
 
 // returns: (nkeys,inf_loop)
-func simulateGuard(grid *([][]byte), o_r int, o_c int) (int, bool) {
+func simulateGuard(grid *([][]byte), o_r int, o_c int) (int, bool, []*GridPoint) {
 	h := len(*grid)
 	w := len((*grid)[0])
 	r, c := findCaret(*grid)
@@ -48,7 +47,9 @@ func simulateGuard(grid *([][]byte), o_r int, o_c int) (int, bool) {
 	// store position and direction, to detect loops
 	pd_m := make(map[string]bool)
 	inf_loop := true
+	path := []*GridPoint{}
 	for {
+		path = append(path, &GridPoint{r, c})
 		pk := strconv.Itoa(r) + ":" + strconv.Itoa(c)
 		p_m[pk] = true
 		pdk := strconv.Itoa(r) + ":" + strconv.Itoa(c) + ":" + strconv.Itoa(di)
@@ -74,15 +75,23 @@ func simulateGuard(grid *([][]byte), o_r int, o_c int) (int, bool) {
 	}
 	// count distinct positions, ignoring direction
 	nkeys := len(p_m)
-	return nkeys, inf_loop
+	return nkeys, inf_loop, path
 }
 
 func day06partOne(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
-	img := strListAs2dBytes(lines)
-	nkeys, _ := simulateGuard(&img, -1, -1)
+	h := len(lines)
+	w := len(lines[0])
+	grid := strListAs2dBytes(lines)
+	nkeys, _, path := simulateGuard(&grid, -1, -1)
 	var ret = nkeys
+	fmt.Printf("guard visits %d of %d locations\n", nkeys, h*w)
+	// fmt.Println(path)
+	for _, v := range path {
+		fmt.Printf("%d,%d ", v.r, v.c)
+	}
+	fmt.Println()
 	LogPartOneResult(ret, start)
 }
 
@@ -98,26 +107,44 @@ func deepCopy2dBytes(inp [][]byte) [][]byte {
 	return out
 }
 
-// TODO: speed this up by considering only the positions that form
-// a diagonal rectangle of "#"s that form a loop.
 func day06partTwo(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
-	img := strListAs2dBytes(lines)
+	grid := strListAs2dBytes(lines)
 	h := len(lines)
 	w := len(lines[0])
 	obst := 0
+	n_sim := 0
 	for r := 0; r < h; r++ {
 		for c := 0; c < w; c++ {
-			if img[r][c] != '.' {
+			if grid[r][c] == '.' {
+				n_sim++
+			}
+		}
+	}
+	fmt.Println("naively, sims to run:", n_sim)
+
+	_, _, path := simulateGuard(&grid, -1, -1)
+	fmt.Println("tracing path, sims to run:", len(path))
+	for r := 0; r < h; r++ {
+		for c := 0; c < w; c++ {
+			if grid[r][c] != '.' {
 				continue
 			}
-			_, inf_loop := simulateGuard(&img, r, c)
+			_, inf_loop, _ := simulateGuard(&grid, r, c)
 			if inf_loop {
 				obst++
 			}
 		}
 	}
+
+	// TODO: keep debugging path-tracing approach.
+	// for i := len(path) - 1; i >= 0; i-- {
+	// 	_, inf_loop, _ := simulateGuard(&grid, path[i].r, path[i].c)
+	// 	if inf_loop {
+	// 		obst++
+	// 	}
+	// }
 	var ret = obst
 	LogPartTwoResult(ret, start)
 }
@@ -127,11 +154,11 @@ func day06main() time.Duration {
 	fmt.Println("Example:")
 	day06partOne(day06example)
 	day06partTwo(day06example)
-	data, _ := os.ReadFile("inputs/day06.txt")
-	content := string(data)
-	fmt.Println("\nFrom file:")
-	day06partOne(content)
-	day06partTwo(content)
+	// data, _ := os.ReadFile("inputs/day06.txt")
+	// content := string(data)
+	// fmt.Println("\nFrom file:")
+	// day06partOne(content)
+	// day06partTwo(content)
 	elapsed := time.Since(start)
 	return elapsed
 }
