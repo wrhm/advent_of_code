@@ -39,7 +39,7 @@ func makeCountFromPoi(poi map[int]int) map[int]int {
 	return count
 }
 
-func dispRobots2(poi map[int]int, w int, h int, quad bool) {
+func dispRobots(poi map[int]int, w int, h int, quad bool) {
 	// rc_pos:count
 	count := makeCountFromPoi(poi)
 	fmt.Println()
@@ -99,7 +99,6 @@ func safetyFactor(pvs [][]int, w int, h int, sec int, sleep_millis int) int {
 		r := v[1] // py
 		pos_of_id[i] = rCToInt(r, c, kDay14Mult)
 	}
-	dispRobots2(pos_of_id, w, h, false)
 	for n := 1; n <= sec; n++ {
 		var rs []int
 		var cs []int
@@ -127,12 +126,7 @@ func safetyFactor(pvs [][]int, w int, h int, sec int, sleep_millis int) int {
 			cs = append(cs, new_c)
 			pos_of_id[i] = rCToInt(new_r, new_c, kDay14Mult)
 		}
-		time.Sleep(time.Duration(sleep_millis) * time.Millisecond)
-
-		fmt.Printf("after %d seconds:\n", n)
-		dispRobots2(pos_of_id, w, h, false)
 	}
-	// dispRobots(pos_of_id, w, h, false)
 	return quadrantsProduct(pos_of_id, w, h, true)
 }
 
@@ -167,7 +161,7 @@ func naiveModInverse(x int, n int, max_tries int) int {
 	return -1
 }
 
-func findPictureDay(pvs [][]int, w int, h int, sec int, sleep_millis int, print_tree bool) int {
+func findPictureDay(pvs [][]int, w int, h int, print_tree bool) int {
 	// robot_id:rc_pos
 	pos_of_id := make(map[int]int)
 	for i, v := range pvs {
@@ -175,13 +169,11 @@ func findPictureDay(pvs [][]int, w int, h int, sec int, sleep_millis int, print_
 		r := v[1] // py
 		pos_of_id[i] = rCToInt(r, c, kDay14Mult)
 	}
-	//dispRobots2(pos_of_id, w, h, false)
 	best_rv := 1e6
 	rvn := 0
 	best_cv := 1e6
 	cvn := 0
-	limit := w * h * 2 //110
-	for n := 1; n <= limit; n++ {
+	for n := 1; n <= 110; n++ {
 		var rs []int
 		var cs []int
 		for i, v := range pvs {
@@ -210,34 +202,15 @@ func findPictureDay(pvs [][]int, w int, h int, sec int, sleep_millis int, print_
 		}
 		rv := variance(rs)
 		cv := variance(cs)
-		// fmt.Printf("after %d seconds:\n", n)
-		// fmt.Println("rv", rv, "cv", cv)
-		improved := false
 		if rv < best_rv {
 			best_rv = rv
 			rvn = n
-			fmt.Printf("best rv so far: %.2f after n=%d\n", best_rv, n)
-			improved = true
 		}
 		if cv < best_cv {
 			best_cv = cv
 			cvn = n
-			fmt.Printf("best cv so far: %.2f after n=%d\n", best_cv, n)
-			improved = true
-		}
-		time.Sleep(time.Duration(sleep_millis) * time.Millisecond)
-
-		if improved {
-			fmt.Printf("after %d seconds:\n", n)
-			fmt.Println("improved. image:")
-			dispRobots2(pos_of_id, w, h, false)
 		}
 	}
-	fmt.Printf("best rv: %.2f after n=%d\n", best_rv, rvn)
-	fmt.Printf("best cv: %.2f after n=%d\n", best_cv, cvn)
-	// dispRobots(pos_of_id, w, h, false)
-	fmt.Println("foo")
-	// return quadrantsProduct(pos_of_id, w, h, true)
 
 	/*
 		t = bc mod w
@@ -252,12 +225,10 @@ func findPictureDay(pvs [][]int, w int, h int, sec int, sleep_millis int, print_
 		bc is cvn
 		br is rvn
 	*/
-	fmt.Println("w*h", w*h)
 	w_inverse := naiveModInverse(w, h, 100)
-	fmt.Println("naive inverse", w_inverse)
 	ret := cvn + ((w_inverse*(rvn-cvn))%h)*w
 
-	if !print_tree {
+	if len(pvs) < 100 || !print_tree {
 		return ret
 	}
 
@@ -267,8 +238,7 @@ func findPictureDay(pvs [][]int, w int, h int, sec int, sleep_millis int, print_
 		r := v[1] // py
 		pos_of_id[i] = rCToInt(r, c, kDay14Mult)
 	}
-	limit = ret + 50
-	for n := 1; n <= limit; n++ {
+	for n := 1; n <= ret; n++ {
 		var rs []int
 		var cs []int
 		for i, v := range pvs {
@@ -296,18 +266,11 @@ func findPictureDay(pvs [][]int, w int, h int, sec int, sleep_millis int, print_
 			pos_of_id[i] = rCToInt(new_r, new_c, kDay14Mult)
 		}
 
-		time.Sleep(time.Duration(sleep_millis) * time.Millisecond)
-
 		if n == ret {
-			fmt.Printf("after %d seconds:\n", n)
-			// fmt.Println("improved. image:")
-			dispRobots2(pos_of_id, w, h, false)
+			dispRobots(pos_of_id, w, h, false)
 			break
-		} else if n%100 == 0 {
-			fmt.Println("passed n of", n)
 		}
 	}
-	fmt.Println("limit", limit)
 	return ret
 }
 
@@ -341,26 +304,23 @@ func day14partTwo(contents string) {
 	}
 	w := 11
 	h := 7
-	sleep_millis := 0
 	if len(lines) > 20 {
 		w = 101
 		h = 103
-		// sleep_millis = 500
 	}
-	// 38 or 88 ?
-	var ret = findPictureDay(pvs, w, h, 1000, sleep_millis, true)
+	var ret = findPictureDay(pvs, w, h, false)
 	LogPartTwoResult(ret, start)
 }
 
 func day14main() time.Duration {
 	start := time.Now()
 	fmt.Println("Example:")
-	// day14partOne(day14example)
-	// day14partTwo(day14example)
+	day14partOne(day14example)
+	day14partTwo(day14example)
 	data, _ := os.ReadFile("inputs/day14.txt")
 	content := string(data)
 	fmt.Println("\nFrom file:")
-	// day14partOne(content)
+	day14partOne(content)
 	day14partTwo(content)
 	elapsed := time.Since(start)
 	return elapsed
