@@ -50,6 +50,30 @@ func parseAllNums(s string) []int {
 	return nums
 }
 
+func parseAllNumsPosNeg(s string) []int {
+	dr, _ := regexp.Compile(`-?\d+`)
+	num_strs := dr.FindAllString(s, -1)
+	var nums []int
+	for _, v := range num_strs {
+		// fmt.Println("v", v)
+		j := 0
+		if v[0] == '-' {
+			i, _ := strconv.Atoi(v[1:])
+			j = -i
+		} else {
+			i, _ := strconv.Atoi(v)
+			j = i
+		}
+		nums = append(nums, j)
+	}
+	return nums
+}
+
+// for r := 0; r < h; r++ {
+// 	for c := 0; c < w; c++ {
+// 	}
+// }
+
 func inBounds(x int, lo int, hi int) bool {
 	return lo <= x && x <= hi
 }
