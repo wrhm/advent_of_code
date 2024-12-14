@@ -25,7 +25,7 @@ p=9,5 v=-3,-3`
 
 const kDay14Mult = 1000
 
-func dispRobots(poi map[int]int, w int, h int, quad bool) int {
+func makeCountFromPoi(poi map[int]int) map[int]int {
 	// rc_pos:count
 	count := make(map[int]int)
 	for _, v := range poi {
@@ -36,11 +36,13 @@ func dispRobots(poi map[int]int, w int, h int, quad bool) int {
 			count[v] = 1
 		}
 	}
+	return count
+}
+
+func dispRobots2(poi map[int]int, w int, h int, quad bool) {
+	// rc_pos:count
+	count := makeCountFromPoi(poi)
 	fmt.Println()
-	top_left := 0
-	top_right := 0
-	bottom_left := 0
-	bottom_right := 0
 	for r := 0; r < h; r++ {
 		var row string
 		for c := 0; c < w; c++ {
@@ -49,6 +51,26 @@ func dispRobots(poi map[int]int, w int, h int, quad bool) int {
 				row += " "
 			} else if prs {
 				row += strconv.Itoa(x)
+			} else {
+				row += "."
+			}
+		}
+		fmt.Println(row)
+	}
+}
+
+func quadrantsProduct(poi map[int]int, w int, h int, quad bool) int {
+	// rc_pos:count
+	count := makeCountFromPoi(poi)
+	top_left := 0
+	top_right := 0
+	bottom_left := 0
+	bottom_right := 0
+	for r := 0; r < h; r++ {
+		for c := 0; c < w; c++ {
+			x, prs := count[rCToInt(r, c, kDay14Mult)]
+			if quad && (r == h/2 || c == w/2) {
+			} else if prs {
 				if r < h/2 {
 					if c < w/2 {
 						top_left += x
@@ -63,36 +85,25 @@ func dispRobots(poi map[int]int, w int, h int, quad bool) int {
 					}
 				}
 			} else {
-				row += "."
 			}
 		}
-		fmt.Println(row)
-	}
-	if quad {
-		fmt.Println(top_left, top_right, bottom_left, bottom_right)
 	}
 	return top_left * top_right * bottom_left * bottom_right
 }
 
-func safetyFactor(pvs [][]int, w int, h int, sec int) int {
+func safetyFactor(pvs [][]int, w int, h int, sec int, sleep_millis int) int {
 	// robot_id:rc_pos
 	pos_of_id := make(map[int]int)
 	for i, v := range pvs {
-		// if i != 10 {
-		// 	continue //debugging the example
-		// }
 		c := v[0] // px
 		r := v[1] // py
-		// dc := v[2] // vx
-		// dr := v[3] // vy
 		pos_of_id[i] = rCToInt(r, c, kDay14Mult)
 	}
-	dispRobots(pos_of_id, w, h, false)
+	dispRobots2(pos_of_id, w, h, false)
 	for n := 1; n <= sec; n++ {
+		var rs []int
+		var cs []int
 		for i, v := range pvs {
-			// if i != 10 {
-			// 	continue //debugging the example
-			// }
 			r, c := rCFromInt(pos_of_id[i], kDay14Mult)
 			dc := v[2] // vx
 			dr := v[3] // vy
@@ -112,15 +123,192 @@ func safetyFactor(pvs [][]int, w int, h int, sec int) int {
 					break
 				}
 			}
-			fmt.Printf("n=%d. r#%d (dr=%d,dc=%d) moved from %d,%d to %d,%d\n", n, i, dr, dc, r, c, new_r, new_c)
+			rs = append(rs, new_r)
+			cs = append(cs, new_c)
 			pos_of_id[i] = rCToInt(new_r, new_c, kDay14Mult)
 		}
-		fmt.Printf("after %d seconds:\n", n)
-		dispRobots(pos_of_id, w, h, false)
-	}
-	dispRobots(pos_of_id, w, h, false)
+		time.Sleep(time.Duration(sleep_millis) * time.Millisecond)
 
-	return dispRobots(pos_of_id, w, h, true)
+		fmt.Printf("after %d seconds:\n", n)
+		dispRobots2(pos_of_id, w, h, false)
+	}
+	// dispRobots(pos_of_id, w, h, false)
+	return quadrantsProduct(pos_of_id, w, h, true)
+}
+
+func sum(x []int) int {
+	ret := 0
+	for _, v := range x {
+		ret += v
+	}
+	return ret
+}
+
+func mean(x []int) float64 {
+	return float64(sum(x)) / float64(len(x))
+}
+
+func variance(x []int) float64 {
+	mu := mean(x)
+	num := 0.0
+	for _, v := range x {
+		diff := float64(v) - mu
+		num += diff * diff
+	}
+	return num / float64(len(x))
+}
+
+func naiveModInverse(x int, n int, max_tries int) int {
+	for i := 0; i < max_tries; i++ {
+		if (i*x)%n == 1 {
+			return i
+		}
+	}
+	return -1
+}
+
+func findPictureDay(pvs [][]int, w int, h int, sec int, sleep_millis int, print_tree bool) int {
+	// robot_id:rc_pos
+	pos_of_id := make(map[int]int)
+	for i, v := range pvs {
+		c := v[0] // px
+		r := v[1] // py
+		pos_of_id[i] = rCToInt(r, c, kDay14Mult)
+	}
+	//dispRobots2(pos_of_id, w, h, false)
+	best_rv := 1e6
+	rvn := 0
+	best_cv := 1e6
+	cvn := 0
+	limit := w * h * 2 //110
+	for n := 1; n <= limit; n++ {
+		var rs []int
+		var cs []int
+		for i, v := range pvs {
+			r, c := rCFromInt(pos_of_id[i], kDay14Mult)
+			dc := v[2] // vx
+			dr := v[3] // vy
+			new_r := (r + dr) % h
+			for {
+				if new_r < 0 {
+					new_r += h
+				} else {
+					break
+				}
+			}
+			new_c := (c + dc) % w
+			for {
+				if new_c < 0 {
+					new_c += w
+				} else {
+					break
+				}
+			}
+			rs = append(rs, new_r)
+			cs = append(cs, new_c)
+			pos_of_id[i] = rCToInt(new_r, new_c, kDay14Mult)
+		}
+		rv := variance(rs)
+		cv := variance(cs)
+		// fmt.Printf("after %d seconds:\n", n)
+		// fmt.Println("rv", rv, "cv", cv)
+		improved := false
+		if rv < best_rv {
+			best_rv = rv
+			rvn = n
+			fmt.Printf("best rv so far: %.2f after n=%d\n", best_rv, n)
+			improved = true
+		}
+		if cv < best_cv {
+			best_cv = cv
+			cvn = n
+			fmt.Printf("best cv so far: %.2f after n=%d\n", best_cv, n)
+			improved = true
+		}
+		time.Sleep(time.Duration(sleep_millis) * time.Millisecond)
+
+		if improved {
+			fmt.Printf("after %d seconds:\n", n)
+			fmt.Println("improved. image:")
+			dispRobots2(pos_of_id, w, h, false)
+		}
+	}
+	fmt.Printf("best rv: %.2f after n=%d\n", best_rv, rvn)
+	fmt.Printf("best cv: %.2f after n=%d\n", best_cv, cvn)
+	// dispRobots(pos_of_id, w, h, false)
+	fmt.Println("foo")
+	// return quadrantsProduct(pos_of_id, w, h, true)
+
+	/*
+		t = bc mod w
+		t = br mod h
+
+		bc+k*w=br (mod h)
+		k*w=br-bc (mod h)
+		k = inverse(w)*(br-bc) (mod h)
+
+		t = bc + inverse(w)*(br-bc)*w
+
+		bc is cvn
+		br is rvn
+	*/
+	fmt.Println("w*h", w*h)
+	w_inverse := naiveModInverse(w, h, 100)
+	fmt.Println("naive inverse", w_inverse)
+	ret := cvn + ((w_inverse*(rvn-cvn))%h)*w
+
+	if !print_tree {
+		return ret
+	}
+
+	// rerun the simulation longer to print the tree
+	for i, v := range pvs {
+		c := v[0] // px
+		r := v[1] // py
+		pos_of_id[i] = rCToInt(r, c, kDay14Mult)
+	}
+	limit = ret + 50
+	for n := 1; n <= limit; n++ {
+		var rs []int
+		var cs []int
+		for i, v := range pvs {
+			r, c := rCFromInt(pos_of_id[i], kDay14Mult)
+			dc := v[2] // vx
+			dr := v[3] // vy
+			new_r := (r + dr) % h
+			for {
+				if new_r < 0 {
+					new_r += h
+				} else {
+					break
+				}
+			}
+			new_c := (c + dc) % w
+			for {
+				if new_c < 0 {
+					new_c += w
+				} else {
+					break
+				}
+			}
+			rs = append(rs, new_r)
+			cs = append(cs, new_c)
+			pos_of_id[i] = rCToInt(new_r, new_c, kDay14Mult)
+		}
+
+		time.Sleep(time.Duration(sleep_millis) * time.Millisecond)
+
+		if n == ret {
+			fmt.Printf("after %d seconds:\n", n)
+			// fmt.Println("improved. image:")
+			dispRobots2(pos_of_id, w, h, false)
+			break
+		} else if n%100 == 0 {
+			fmt.Println("passed n of", n)
+		}
+	}
+	fmt.Println("limit", limit)
+	return ret
 }
 
 func day14partOne(contents string) {
@@ -130,7 +318,6 @@ func day14partOne(contents string) {
 	for _, line := range lines {
 		// [c,r,dc,dr]
 		nums := parseAllNumsPosNeg(line)
-		// fmt.Println(line, nums)
 		pvs = append(pvs, nums)
 	}
 	w := 11
@@ -139,27 +326,41 @@ func day14partOne(contents string) {
 		w = 101
 		h = 103
 	}
-	var ret = safetyFactor(pvs, w, h, 100)
+	var ret = safetyFactor(pvs, w, h, 100, 0)
 	LogPartOneResult(ret, start)
 }
 
 func day14partTwo(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
-	fmt.Printf("lines has size %d\n", len(lines))
-	var ret = 0
+	var pvs [][]int
+	for _, line := range lines {
+		// [c,r,dc,dr]
+		nums := parseAllNumsPosNeg(line)
+		pvs = append(pvs, nums)
+	}
+	w := 11
+	h := 7
+	sleep_millis := 0
+	if len(lines) > 20 {
+		w = 101
+		h = 103
+		// sleep_millis = 500
+	}
+	// 38 or 88 ?
+	var ret = findPictureDay(pvs, w, h, 1000, sleep_millis, true)
 	LogPartTwoResult(ret, start)
 }
 
 func day14main() time.Duration {
 	start := time.Now()
 	fmt.Println("Example:")
-	day14partOne(day14example)
-	day14partTwo(day14example)
+	// day14partOne(day14example)
+	// day14partTwo(day14example)
 	data, _ := os.ReadFile("inputs/day14.txt")
 	content := string(data)
 	fmt.Println("\nFrom file:")
-	day14partOne(content)
+	// day14partOne(content)
 	day14partTwo(content)
 	elapsed := time.Since(start)
 	return elapsed
