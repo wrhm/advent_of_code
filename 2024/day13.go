@@ -100,7 +100,7 @@ Add the equations and isolate n.
 m(a1+a2)+n(b1+b2)=p2+p2
 n=(p1-ma1)/b1  (Eq. 3)
 
-Then plug that expression for n back into Eq 1.
+Then plug that expression for n back into Eq. 1.
 
 ma2+b2(p1-ma1)/b1=p2
 
@@ -108,7 +108,7 @@ Solve for m, rationalizing by multiplying through by (b1/b1).
 
 m=(b1p2-b2p1)/(a2b1-b2a1)  (Eq. 4)
 
-Then substitue Eq. 4 into Eq. 3 to compute n from m.
+Then substitute Eq. 4 into Eq. 3 to compute n from m.
 */
 func day13partTwo(contents string) {
 	start := time.Now()
