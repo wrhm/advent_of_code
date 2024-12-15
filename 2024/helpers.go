@@ -39,6 +39,11 @@ func print2dBytesList(lines [][]byte) {
 
 // Algorithms
 
+// for r := 0; r < h; r++ {
+// 	for c := 0; c < w; c++ {
+// 	}
+// }
+
 func parseAllNums(s string) []int {
 	dr, _ := regexp.Compile(`\d+`)
 	num_strs := dr.FindAllString(s, -1)
@@ -68,11 +73,6 @@ func parseAllNumsPosNeg(s string) []int {
 	}
 	return nums
 }
-
-// for r := 0; r < h; r++ {
-// 	for c := 0; c < w; c++ {
-// 	}
-// }
 
 func inBounds(x int, lo int, hi int) bool {
 	return lo <= x && x <= hi
@@ -122,4 +122,17 @@ func digitRuneAsInt(r rune) int {
 func digitByteAsInt(b byte) int {
 	v, _ := strconv.Atoi(string(b))
 	return v
+}
+
+func findByte(lines [][]byte, b byte) (int, int) {
+	h := len(lines)
+	w := len(lines[0])
+	for r := 0; r < h; r++ {
+		for c := 0; c < w; c++ {
+			if lines[r][c] == b {
+				return r, c
+			}
+		}
+	}
+	return -1, -1
 }

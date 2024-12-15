@@ -14,6 +14,9 @@ func day00partOne(contents string) {
 	start := time.Now()
 	lines := strings.Split(contents, "\n")
 	fmt.Printf("lines has size %d\n", len(lines))
+	for _, line := range lines {
+		fmt.Println(line)
+	}
 	var ret = 0
 	LogPartOneResult(ret, start)
 }
