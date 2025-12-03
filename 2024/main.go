@@ -38,7 +38,8 @@ func main() {
 		// {12, day12main},
 		// {13, day13main},
 		// {14, day14main},
-		{15, day15main},
+		// {15, day15main},
+		{16, day16main},
 	}
 	timings := []DayTiming{}
 	for _, v := range fns {

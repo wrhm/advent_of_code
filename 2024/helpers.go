@@ -136,3 +136,13 @@ func findByte(lines [][]byte, b byte) (int, int) {
 	}
 	return -1, -1
 }
+
+// Compress a 2D int value into a single larger int, for easier
+// processing of point locations.
+func rCToInt(r int, c int, mult int) int {
+	return r*mult + c
+}
+
+func rCFromInt(hash int, mult int) (int, int) {
+	return hash / mult, hash % mult
+}
