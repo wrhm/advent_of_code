@@ -31,7 +31,9 @@ L82
   
 let lines = Str.split (Str.regexp "\n") example_input *)
 
-let lines = Str.split (Str.regexp "\n") (read_file "inputs/input01.txt")
+let lines = 
+  let all_lines = Str.split (Str.regexp "\n") (read_file "inputs/input01.txt") in
+  List.filter (fun s -> String.length s > 0) all_lines
 
 let parse_letter_number_re =
   Str.regexp "^\\([A-Za-z]+\\)\\([0-9]+\\)$"
@@ -106,7 +108,6 @@ let rec running_sum acc modv ts =
     let nv = (acc + tuple_val (lr,n)+modv*999) mod modv
   in nv::(running_sum nv modv xs)
 
-let as_tuple_options = List.map parse_string_to_tuple_option lines
-let as_tuples = List.map de_option as_tuple_options
+let as_tuples = List.filter_map parse_string_to_tuple_option lines
 let running_sums = (running_sum 50 100 (as_tuples))
 let d01p1 = (List.length (List.filter (fun x -> x=0) running_sums))
