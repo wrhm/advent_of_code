@@ -14,8 +14,6 @@ L99
 R14
 L82
 |ex} in
-let lines = Str.split (Str.regexp "\n") example_input in
-(* Printf.eprintf "%x" lines; *)
-(* List.iter print_endline lines;
-Printf.eprintf "%d" (List.length lines); *)
-assert ((List.length lines) == 10);
+let ex_lines = Str.split (Str.regexp "\n") example_input in
+assert ((List.length ex_lines) == 10);
+assert (d01p1 ex_lines == 3);

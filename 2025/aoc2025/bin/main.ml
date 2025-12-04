@@ -8,4 +8,4 @@ To continuously build/run:
 *)
 
 let () = 
-  Printf.eprintf "\nAnswer 1p1: %d\n" (Aoc2025.Days.d01p1);
+  Printf.eprintf "\nAnswer 1p1: %d\n" (Aoc2025.Days.d01p1 Aoc2025.Days.lines01);

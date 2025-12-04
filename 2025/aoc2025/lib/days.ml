@@ -7,7 +7,7 @@ let read_file filename =
   with
   | _ -> "ERROR"
 
-let lines = 
+let lines01 = 
   let all_lines = Str.split (Str.regexp "\n") (read_file "inputs/input01.txt") in
   List.filter (fun s -> String.length s > 0) all_lines
 
@@ -38,6 +38,6 @@ let rec running_sum acc modv ts =
     let nv = (acc + tuple_val (lr,n)+modv*999) mod modv
   in nv::(running_sum nv modv xs)
 
-let as_tuples = List.filter_map parse_string_to_tuple_option lines
-let running_sums = (running_sum 50 100 (as_tuples))
-let d01p1 = (List.length (List.filter (fun x -> x=0) running_sums))
+let as_tuples x = List.filter_map parse_string_to_tuple_option x
+let running_sums x = (running_sum 50 100 (as_tuples x))
+let d01p1 lines = (List.length (List.filter (fun x -> x=0) (running_sums lines)))
