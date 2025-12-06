@@ -1,8 +1,6 @@
 open Io_helpers
 
-let lines01 = 
-  let all_lines = Str.split (Str.regexp "\n") (read_file "inputs/input01.txt") in
-  List.filter (fun s -> String.length s > 0) all_lines
+let lines01 = nonempty_lines_from_file "inputs/input01.txt"
 
 let parse_letter_number_re =
   Str.regexp "^\\([A-Za-z]+\\)\\([0-9]+\\)$"
@@ -65,3 +63,5 @@ let running_modsums x = (running_modsum 50 100 (as_tuples x))
 let d01p1 lines = (List.length (List.filter (fun x -> x=0) (running_modsums lines)))
 let d01p2 lines =
   count_zero_crossings4 50 (List.map tuple_val (as_tuples lines))
+
+(* let lines02 = nonempty_lines_from_file "examppl/input02.txt" *)
