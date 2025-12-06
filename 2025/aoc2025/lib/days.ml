@@ -1,11 +1,4 @@
-let read_file filename =
-  try
-    let ic = In_channel.open_text filename in
-    let content = In_channel.input_all ic in
-    In_channel.close ic;
-    content
-  with
-  | _ -> "ERROR"
+open Io_helpers
 
 let lines01 = 
   let all_lines = Str.split (Str.regexp "\n") (read_file "inputs/input01.txt") in
@@ -72,16 +65,3 @@ let running_modsums x = (running_modsum 50 100 (as_tuples x))
 let d01p1 lines = (List.length (List.filter (fun x -> x=0) (running_modsums lines)))
 let d01p2 lines =
   count_zero_crossings4 50 (List.map tuple_val (as_tuples lines))
-
-let print_list item_printer sep lst =
-  List.iter (fun x -> item_printer x; print_string sep) lst;
-  print_newline ()
-
-let print_int_list = print_list print_int " "
-let print_string_list = print_list print_string " "
-
-let print_pair p1 p2 (x,y) = print_string "("; p1 x; print_string ","; p2 y; print_string ") "
-
-let print_pair_list p1 p2 lst =
-  List.iter (fun (x,y) -> print_string "("; p1 x; print_string ","; p2 y; print_string ") ") lst;
-  print_newline ()
