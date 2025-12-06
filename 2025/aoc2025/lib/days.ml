@@ -64,4 +64,31 @@ let d01p1 lines = (List.length (List.filter (fun x -> x=0) (running_modsums line
 let d01p2 lines =
   count_zero_crossings4 50 (List.map tuple_val (as_tuples lines))
 
-(* let lines02 = nonempty_lines_from_file "examppl/input02.txt" *)
+let lines02 = nonempty_lines_from_file "inputs/input02.txt"
+let string_halves_as_ints s =
+  let n = String.length s in
+  let first_len = (n + 1) / 2 in
+  let second_len = n - first_len in
+  let first = int_of_string @@ String.sub s 0 first_len in
+  let second = if second_len = 0 then 0 else int_of_string @@ String.sub s first_len second_len in
+  (first, second)
+
+let concat_nums a b = int_of_string @@ (string_of_int a)^(string_of_int b)
+
+let rec range a b =
+  if a>b then []
+  else a::(range (a+1) b)
+
+let repeats_in_range a b =
+  let (a1, a2) = string_halves_as_ints a in
+  let (b1, b2) = string_halves_as_ints b in
+  let min_y = min (min a1 a2) (min b1 b2) in
+  let max_y = max (max a1 a2) (max b1 b2) in
+  List.filter (fun x -> (int_of_string a) <= x && x <= (int_of_string b))
+  @@ List.map (fun y -> concat_nums y y) @@ range min_y max_y
+
+let d02p1 lines =
+  let pairs02 = List.map (String.split_on_char '-') (String.split_on_char ',' @@ List.nth lines 0) in
+  let nums2d02 = List.map (fun t -> repeats_in_range (List.nth t 0) (List.nth t 1)) pairs02 in
+  let list_sum = List.fold_left (+) 0 in
+  list_sum @@ List.map list_sum nums2d02
