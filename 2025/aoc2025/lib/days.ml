@@ -121,5 +121,4 @@ let d02p2 lines =
   let rep_ints = List.map int_of_string rep_strs_deduped in
   let nums_in_range a b = List.filter (fun x -> a <= x && x <= b) rep_ints in
   let nums_to_sum = List.map (fun t -> nums_in_range (int_of_string @@ List.nth t 0) (int_of_string @@ List.nth t 1)) pairs02 in
-  print_list_of_lists print_int " " nums_to_sum;
   list_sum @@ List.map list_sum nums_to_sum

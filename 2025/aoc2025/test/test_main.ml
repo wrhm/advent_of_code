@@ -45,5 +45,5 @@ assert ([1;2;3]=remove_adjacent_repeats [1;1;2;3;3;3]);
 (* print_list_of_lists print_int " " (d02p2 ex_lines02); *)
 print_int (d02p2 ex_lines02);
 print_string "\n";
-print_int @@ List.length rep_strs;
+(* print_int @@ List.length rep_strs; *)
 assert (d02p2 ex_lines02 = 4174379265);
