@@ -122,3 +122,7 @@ let d02p2 lines =
   let nums_in_range a b = List.filter (fun x -> a <= x && x <= b) rep_ints in
   let nums_to_sum = List.map (fun t -> nums_in_range (int_of_string @@ List.nth t 0) (int_of_string @@ List.nth t 1)) pairs02 in
   list_sum @@ List.map list_sum nums_to_sum
+
+let lines03 = nonempty_lines_from_file "inputs/input03.txt"
+
+(* let d03p1 lines = *)
