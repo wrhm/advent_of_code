@@ -125,4 +125,35 @@ let d02p2 lines =
 
 let lines03 = nonempty_lines_from_file "inputs/input03.txt"
 
-(* let d03p1 lines = *)
+let rec biggest_except_last m vs =
+  match vs with
+  | [] -> m
+  | [_] -> m
+  | (x::y::xs) -> biggest_except_last (max m x) (y::xs)
+
+let rec max_of_list acc vs =
+  match vs with
+  | [] -> acc
+  | [x] -> max acc x
+  | (x::xs) -> max_of_list (max acc x) xs
+
+let rec biggest_seen_after dig seen vs =
+  match (dig, seen, vs) with
+  | (_,_,[]) -> print_string "empty"; failwith "Empty list"
+  | (_, true, vs) -> max_of_list 0 vs
+  | (_, false, (x::xs)) -> biggest_seen_after dig (dig=x) xs
+
+let str_to_char_list s = List.of_seq @@ String.to_seq s
+let digit_char_to_int c = (int_of_char c) - 48
+let biggest_joltage s = 
+  let int_digits = List.map digit_char_to_int @@ str_to_char_list s in
+  let left_digit = biggest_except_last 0 int_digits in
+  let right_digit = biggest_seen_after left_digit false int_digits in
+  Printf.eprintf "%s: %d\n" s (left_digit*10 + right_digit);
+  left_digit*10 + right_digit
+
+let d03p1 lines =
+  (* let banks = List.map (fun x -> List.map digit_char_to_int x) @@ List.map
+  str_to_char_list lines in *)
+  let bigjolt = List.map biggest_joltage lines in
+  list_sum bigjolt;
