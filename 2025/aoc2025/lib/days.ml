@@ -149,7 +149,6 @@ let biggest_joltage s =
   let int_digits = List.map digit_char_to_int @@ str_to_char_list s in
   let left_digit = biggest_except_last 0 int_digits in
   let right_digit = biggest_seen_after left_digit false int_digits in
-  Printf.eprintf "%s: %d\n" s (left_digit*10 + right_digit);
   left_digit*10 + right_digit
 
 let d03p1 lines =
