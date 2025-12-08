@@ -48,7 +48,7 @@ assert ((1,5) = earliest_biggest_iv (0,0) [(0,1);(1,5);(2,5);(3,3)]);
 
 let choose_biggest_after_pos_i_except_for_last_n i n ordered_pairs =
   let len = List.length ordered_pairs in
-  let consider_up_to = len - n in
+  let consider_up_to = len - n + 1 in
   let filtered = List.filter (fun (ind,_) -> ind < consider_up_to) ordered_pairs in
   let after_i = List.filter (fun (ind,_) -> ind > i) filtered in
   earliest_biggest_iv (0,0) after_i in
@@ -64,6 +64,8 @@ let rec choose_pairs ind n pairs =
   let (i,v) = choose_biggest_after_pos_i_except_for_last_n ind n pairs in
   (i,v)::choose_pairs i (n-1) pairs in
 
+(* Choose the subsequence of s that makes the 12 digit number with the highest
+possible value. *)
 let biggest_joltage_twelve s = 
   print_string "\n";
   let int_digits = List.map digit_char_to_int @@ str_to_char_list s in
@@ -77,15 +79,18 @@ let biggest_joltage_twelve s =
   print_pair print_int print_int @@ choose_biggest_after_pos_i_except_for_last_n (0) 11 ordered_pairs;
   print_pair print_int print_int @@ choose_biggest_after_pos_i_except_for_last_n
   (1) 10 ordered_pairs; *)
-  let cpairs = choose_pairs (-1) 12 ordered_pairs in 
+  let cpairs = choose_pairs (-1) 12 ordered_pairs in
   print_string "\n";
   let _ = List.map (fun x -> print_pair print_int print_int x; print_string " ") cpairs in
   print_string "\n";
   let _ = List.map (fun (_,v) -> print_int v; print_string " ") cpairs in
   print_string "\n";
-  List.nth int_digits 0 in
+  let digits = List.map snd cpairs in
+  int_of_string (String.concat "" (List.map string_of_int digits)) in
 
 (* let _ = List.map (fun line -> print_string line; print_string "\n")
 ex_lines03 *)
 (* print_list_of_lists print_int " " @@ ex_lines03; *)
 print_int_list @@ List.map biggest_joltage_twelve ex_lines03;
+print_string "\n";
+print_int @@ list_sum @@ List.map biggest_joltage_twelve ex_lines03;
