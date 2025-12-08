@@ -151,8 +151,4 @@ let biggest_joltage s =
   let right_digit = biggest_seen_after left_digit false int_digits in
   left_digit*10 + right_digit
 
-let d03p1 lines =
-  (* let banks = List.map (fun x -> List.map digit_char_to_int x) @@ List.map
-  str_to_char_list lines in *)
-  let bigjolt = List.map biggest_joltage lines in
-  list_sum bigjolt;
+let d03p1 lines = list_sum @@ List.map biggest_joltage lines

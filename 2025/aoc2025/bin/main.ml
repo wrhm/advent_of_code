@@ -14,5 +14,6 @@ let () =
   Printf.eprintf "\nAnswer 1p2: %d" @@ d01p2 lines01;
   Printf.eprintf "\nAnswer 2p1: %d" @@ d02p1 lines02;
   Printf.eprintf "\nAnswer 2p2: %d" @@ d02p2 lines02;
-  Printf.eprintf "\nAnswer 3p1: %d\n" @@ d03p1 lines03;
+  Printf.eprintf "\nAnswer 3p1: %d" @@ d03p1 lines03;
   (* Printf.eprintf "\nAnswer 3p2: %d" @@ d03p2 lines03; *)
+  Printf.eprintf "\n"

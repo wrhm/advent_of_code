@@ -5,7 +5,7 @@ let read_file filename =
     In_channel.close ic;
     content
   with
-  | _ -> "ERROR"
+  | _ -> "ERROR: could not read file: "^filename
 
 let nonempty_lines_from_file filename = 
   let all_lines = Str.split (Str.regexp "\n") (read_file filename) in
