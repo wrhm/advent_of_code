@@ -36,21 +36,11 @@ assert (d02p2 ex_lines02 = 4174379265);
 let ex_lines03 = nonempty_lines_from_file (example_dir^"example03.txt") in
 assert (d03p1 ex_lines03 = 357);
 
-(* print_pair print_int print_int @@ earliest_biggest_iv (0,0) [(0,1);(1,5);(2,5);(3,3)]; *)
 assert ((0,1) = earliest_biggest_iv (0,0) [(0,1);(1,1)]);
 assert ((1,5) = earliest_biggest_iv (0,0) [(0,1);(1,5);(2,5);(3,3)]);
 
 assert ((1,1) = choose_biggest_after_pos_i_except_for_last_n 0 1 [(0,1);(1,1);(2,1)]);
 assert ((1,1) = choose_biggest_after_pos_i_except_for_last_n 0 1 [(0,1);(1,1);(2,1);(3,1)]);
 assert ((2,1) = choose_biggest_after_pos_i_except_for_last_n 1 1 [(0,1);(1,1);(2,1);(3,1)]);
-print_pair print_int print_int @@ choose_biggest_after_pos_i_except_for_last_n (-1) 12 [(0,8);(1,1);(2,1);(3,1);(4,1);(5,1);(6,1);(7,1);(8,1);(9,1);(10,1);(11,1);(12,1);(13,1);(14,9)];
 assert ((0,8) = choose_biggest_after_pos_i_except_for_last_n (-1) 12 [(0,8);(1,1);(2,1);(3,1);(4,1);(5,1);(6,1);(7,1);(8,1);(9,1);(10,1);(11,1);(12,1);(13,1);(14,9)]);
-
-(* let _ = List.map (fun line -> print_string line; print_string "\n")
-ex_lines03 *)
-(* print_list_of_lists print_int " " @@ ex_lines03; *)
-print_int_list @@ List.map biggest_joltage_twelve ex_lines03;
-print_string "\n";
-print_int @@ list_sum @@ List.map biggest_joltage_twelve ex_lines03;
-print_string "\n";
 assert (d03p2 ex_lines03 = 3121910778619);

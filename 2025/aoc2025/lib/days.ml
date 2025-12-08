@@ -174,18 +174,10 @@ let rec choose_pairs ind n pairs =
 (* Choose the subsequence of s that makes the 12 digit number with the highest
 possible value. *)
 let biggest_joltage_twelve s = 
-  print_string "\n";
   let int_digits = List.map digit_char_to_int @@ str_to_char_list s in
-  print_int_list int_digits;
   let ordered_pairs = List.combine (range 0 @@ -1 + List.length int_digits) int_digits in
   (* print_string "\n"; *)
-  print_pair_list print_int print_int ordered_pairs;
   let cpairs = choose_pairs (-1) 12 ordered_pairs in
-  print_string "\n";
-  let _ = List.map (fun x -> print_pair print_int print_int x; print_string " ") cpairs in
-  print_string "\n";
-  let _ = List.map (fun (_,v) -> print_int v; print_string " ") cpairs in
-  print_string "\n";
   let digits = List.map snd cpairs in
   int_of_string (String.concat "" (List.map string_of_int digits))
 
