@@ -47,25 +47,7 @@ assert (d03p2 ex_lines03 = 3121910778619);
 
 assert ('H' = char_at 0 "Hello");
 assert ('e' = char_from_str_list 0 1 ["Hello"]);
-
-
 assert ('?' = char_from_str_list_or_oob 5 5 [] '?');
 
-
-
-
-
-
 let ex_lines04 = nonempty_lines_from_file (example_dir^"example04.txt") in
-print_list print_string "\n" ex_lines04;
-(* print_char @@ char_from_str_list 0 0 ex_lines04; *)
-(* print_pair_list print_int print_int @@ rc_tuples ex_lines04; *)
-(* print_pair_list print_int print_int @@ List.filter (fun (r,c) ->
-'@'=char_from_str_list r c ex_lines04) @@ rc_tuples ex_lines04; *)
-let rolls = List.filter (fun (r,c) -> '@'=char_from_str_list r c ex_lines04) @@ rc_tuples ex_lines04 in
-let accessible_rolls = List.filter (fun (r,c) -> (neighbors r c ex_lines04 '@')<4) rolls in
-print_string "Number of accessible_rolls: ";
-print_int (List.length accessible_rolls);
-print_string "\n";
-print_pair_list print_int print_int accessible_rolls;
 assert (13 = d04p1 ex_lines04);
