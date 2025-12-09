@@ -182,3 +182,28 @@ let biggest_joltage_twelve s =
   int_of_string (String.concat "" (List.map string_of_int digits))
 
 let d03p2 lines = list_sum @@ List.map biggest_joltage_twelve lines
+
+let lines04 = nonempty_lines_from_file "inputs/input04.txt"
+
+let char_at i s = String.get s i
+let height strs = List.length strs
+let width strs = if height strs = 0 then 0 else String.length @@ List.nth strs 0
+let char_from_str_list r c strs = char_at c @@ List.nth strs r
+
+let char_from_str_list_or_oob r c strs oob =
+let h = height strs in
+let w = width strs in
+if r<0 || r>=h || c<0 || c>=w then oob else char_from_str_list r c strs
+
+let neighbors r c strs nch =
+  List.length @@ List.filter
+    (fun (ri, ci) -> nch=char_from_str_list_or_oob ri ci strs 'X')
+    (List.map (fun (dr,dc) -> (r+dr,c+dc)) [(-1,-1);(-1,0);(-1,1);(0,-1);(0,1);(1,-1);(1,0);(1,1)])
+let rc_tuples strs = 
+  let h = height strs in
+  let w = width strs in
+  cartesian_product (range 0 (h-1)) (range 0 (w-1))
+let d04p1 lines =
+  let rolls = List.filter (fun (r,c) -> '@'=char_from_str_list r c lines) @@ rc_tuples lines in
+  let accessible_rolls = List.filter (fun (r,c) -> (neighbors r c lines '@')<4) rolls in
+  List.length accessible_rolls;
