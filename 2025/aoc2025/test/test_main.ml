@@ -51,8 +51,9 @@ let char_at i s =
 
 assert ('H' = char_at 0 "Hello");
 
-let width strs = String.length @@ List.nth strs 0 in
 let height strs = List.length strs in
+let width strs = if height strs = 0 then 0 else String.length @@ List.nth strs 0 in
+
 
 let char_from_str_list r c strs = char_at c @@ List.nth strs r in
 
