@@ -51,10 +51,4 @@ assert ('?' = char_from_str_list_or_oob 5 5 [] '?');
 
 let ex_lines04 = nonempty_lines_from_file (example_dir^"example04.txt") in
 assert (13 = d04p1 ex_lines04);
-
-
 assert (43=d04p2 ex_lines04);
-
-
-  
-(* print_pair_list print_int print_int @@ remove_rolls ex_lines04 *)
