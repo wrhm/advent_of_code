@@ -52,38 +52,8 @@ assert ('?' = char_from_str_list_or_oob 5 5 [] '?');
 let ex_lines04 = nonempty_lines_from_file (example_dir^"example04.txt") in
 assert (13 = d04p1 ex_lines04);
 
-(* let remove_rolls_n_times n rs ars remaining =
-  if n<=0 then (rs, ars, remaining) else *)
-  (* let next_ars = List.filter (fun (r,c) -> (List.length @@
-  neighbors_among_tuples r c remaining)<4) rs in *)
-  
-let rec remove_rolls_n_times n rs =
-  if n<=0 then rs else
-  let ar = accessible_rolls_among_tuples rs in
-  let others = List.filter (fun x -> not(List.mem x ar)) rs in
-  remove_rolls_n_times (n-1) others in
 
-
-let remove_rolls lines =
-  print_string "\nlines before:\n";
-  print_string_list lines;
-  print_string "\n";
-  let (rs,_) = accessible_rolls lines in
-  (* let remaining = List.filter (fun x -> not(List.mem x ars)) rs in *)
-  let rs_after = remove_rolls_n_times 10 rs in
-  Printf.eprintf "\nrs before (%d):\n" (List.length rs);
-  (* print_pair_list print_int print_int rs; *)
-  (* Printf.eprintf "\nars before (%d):\n" (List.length ars);
-  print_pair_list print_int print_int ars;
-  Printf.eprintf "\nremaining before (%d):\n" (List.length remaining);
-  print_pair_list print_int print_int remaining; *)
-  print_string "\n";
-  Printf.eprintf "\nrs after (%d):\n" (List.length rs_after);
-  (* print_pair_list print_int print_int rs_after; *)
-  (* rs_after *)
-  (List.length rs) - (List.length rs_after) in
-
-assert (43=remove_rolls ex_lines04);
+assert (43=d04p2 ex_lines04);
 
 
   
