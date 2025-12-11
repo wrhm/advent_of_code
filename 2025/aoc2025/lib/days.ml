@@ -200,11 +200,18 @@ let neighbors r c strs nch =
     (fun (ri, ci) -> nch=char_from_str_list_or_oob ri ci strs 'X')
     (List.map (fun (dr,dc) -> (r+dr,c+dc)) [(-1,-1);(-1,0);(-1,1);(0,-1);(0,1);(1,-1);(1,0);(1,1)])
 
-let neighbors_among_tuples r c tuples =
+module IntPair = struct
+  type t = int * int
+  let compare (x1,y1) (x2,y2) = match compare x1 x2 with 0 -> compare y1 y2 | c -> c
+end
+
+module RollSet = Set.Make(IntPair)
+
+let neighbors_among_tuples r c rolls_set =
   List.filter
-    (fun x -> List.mem x tuples)
+    (fun x -> RollSet.mem x rolls_set)
     (List.map (fun (dr,dc) -> (r+dr,c+dc)) [(-1,-1);(-1,0);(-1,1);(0,-1);(0,1);(1,-1);(1,0);(1,1)])
-let rc_tuples strs = 
+let rc_tuples strs =
   let h = height strs in
   let w = width strs in
   cartesian_product (range 0 (h-1)) (range 0 (w-1))
@@ -216,16 +223,9 @@ let accessible_rolls lines =
   let ar = List.filter (fun (r,c) -> (List.length @@ neighbors r c lines '@')<4) rolls in
   (rolls, ar)
 
-module IntPair = struct
-  type t = int * int
-  let compare (x1,y1) (x2,y2) = match compare x1 x2 with 0 -> compare y1 y2 | c -> c
-end
-
-module RollSet = Set.Make(IntPair)
-
 let accessible_rolls_among_tuples rolls_set =
   let ar = RollSet.filter (fun (r,c) ->
-    let neigh = neighbors_among_tuples r c (RollSet.elements rolls_set) in
+    let neigh = neighbors_among_tuples r c rolls_set in
     (List.length neigh) < 4
   ) rolls_set in
   ar
