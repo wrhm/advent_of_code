@@ -237,12 +237,8 @@ let d04p1 lines =
   List.length ar
 
 let rec remove_rolls_n_times n rs_set =
-  Printf.eprintf "\nremove_rolls_n_times: n=%d, set_size=%d" n (RollSet.cardinal rs_set);
-  flush stderr;
   if n<=0 then rs_set else
   let ar_set = accessible_rolls_among_tuples rs_set in
-  (* Printf.eprintf "\n  accessible_rolls: %d" (RollSet.cardinal ar_set); *)
-  flush stderr;
   let others_set = RollSet.diff rs_set ar_set in
   (* Printf.eprintf "\n  remaining after removal: %d" (RollSet.cardinal others_set); *)
   flush stderr;
@@ -251,22 +247,13 @@ let rec remove_rolls_n_times n rs_set =
 
 
 let remove_rolls lines =
-  (* Printf.eprintf "\nremove_rolls: starting..." ; *)
   flush stderr;
   let (rs_list,_) = accessible_rolls lines in
   let rs_set = RollSet.of_list rs_list in
-  Printf.eprintf "\nremove_rolls: initial set size=%d" (RollSet.cardinal rs_set);
-  flush stderr;
   let rs_after_set = remove_rolls_n_times 100 rs_set in
   let result = (RollSet.cardinal rs_set) - (RollSet.cardinal rs_after_set) in
-  (* Printf.eprintf "\nremove_rolls: final result=%d" result; *)
-  flush stderr;
   result
 
 let d04p2 lines =
-  Printf.eprintf "\nd04p2: starting..." ;
-  flush stderr;
   let result = remove_rolls lines in
-  Printf.eprintf "\nd04p2: finished with result=%d" result;
-  flush stderr;
   result

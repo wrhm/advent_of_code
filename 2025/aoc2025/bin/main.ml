@@ -17,7 +17,5 @@ let () =
   Printf.eprintf "\nAnswer 3p1: %d" @@ d03p1 lines03;
   Printf.eprintf "\nAnswer 3p2: %d" @@ d03p2 lines03;
   Printf.eprintf "\nAnswer 4p1: %d" @@ d04p1 lines04;
-  Printf.eprintf "\nhello world";
-  flush stdout;
   Printf.eprintf "\nAnswer 4p2: %d" @@ d04p2 lines04;
   Printf.eprintf "\n"
