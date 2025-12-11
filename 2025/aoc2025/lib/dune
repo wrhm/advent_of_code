@@ -1,4 +1,4 @@
 (library
  (name aoc2025)
- (modules io_helpers days)
+ (modules io_helpers day01 days)
  (libraries str))
