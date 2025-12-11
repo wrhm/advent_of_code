@@ -1,5 +1,12 @@
 open Io_helpers
 
+module IntPair = struct
+  type t = int * int
+  let compare (x1,y1) (x2,y2) = match compare x1 x2 with 0 -> compare y1 y2 | c -> c
+end
+
+module RollSet = Set.Make(IntPair)
+
 let lines01 = nonempty_lines_from_file "inputs/input01.txt"
 
 let parse_letter_number_re =
@@ -216,9 +223,11 @@ let accessible_rolls lines =
   let ar = List.filter (fun (r,c) -> (List.length @@ neighbors r c lines '@')<4) rolls in
   (rolls, ar)
 
-let accessible_rolls_among_tuples rolls =
-  (* let rolls = List.filter (fun (r,c) -> '@'=char_from_str_list r c lines) @@ rc_tuples lines in *)
-  let ar = List.filter (fun (r,c) -> (List.length @@ neighbors_among_tuples r c rolls )<4) rolls in
+let accessible_rolls_among_tuples rolls_set =
+  let ar = RollSet.filter (fun (r,c) ->
+    let neigh = neighbors_among_tuples r c (RollSet.elements rolls_set) in
+    (List.length neigh) < 4
+  ) rolls_set in
   ar
 
 let d04p1 lines =
@@ -227,31 +236,36 @@ let d04p1 lines =
   (* print_pair_list print_int print_int ar; *)
   List.length ar
 
-let rec remove_rolls_n_times n rs =
-  if n<=0 then rs else
-  let ar = accessible_rolls_among_tuples rs in
-  let others = List.filter (fun x -> not(List.mem x ar)) rs in
-  remove_rolls_n_times (n-1) others
+let rec remove_rolls_n_times n rs_set =
+  Printf.eprintf "\nremove_rolls_n_times: n=%d, set_size=%d" n (RollSet.cardinal rs_set);
+  flush stderr;
+  if n<=0 then rs_set else
+  let ar_set = accessible_rolls_among_tuples rs_set in
+  Printf.eprintf "\n  accessible_rolls: %d" (RollSet.cardinal ar_set);
+  flush stderr;
+  let others_set = RollSet.diff rs_set ar_set in
+  Printf.eprintf "\n  remaining after removal: %d" (RollSet.cardinal others_set);
+  flush stderr;
+  remove_rolls_n_times (n-1) others_set
 
 
 let remove_rolls lines =
-  (* print_string "\nlines before:\n";
-  print_string_list lines;
-  print_string "\n"; *)
-  let (rs,_) = accessible_rolls lines in
-  (* let remaining = List.filter (fun x -> not(List.mem x ars)) rs in *)
-  let rs_after = remove_rolls_n_times 10 rs in
-  Printf.eprintf "\nrs before (%d):\n" (List.length rs);
-  (* print_pair_list print_int print_int rs; *)
-  (* Printf.eprintf "\nars before (%d):\n" (List.length ars);
-  print_pair_list print_int print_int ars;
-  Printf.eprintf "\nremaining before (%d):\n" (List.length remaining);
-  print_pair_list print_int print_int remaining; *)
-  print_string "\n";
-  Printf.eprintf "\nrs after (%d):\n" (List.length rs_after);
-  (* print_pair_list print_int print_int rs_after; *)
-  (* rs_after *)
-  (List.length rs) - (List.length rs_after)
+  Printf.eprintf "\nremove_rolls: starting..." ;
+  flush stderr;
+  let (rs_list,_) = accessible_rolls lines in
+  let rs_set = RollSet.of_list rs_list in
+  Printf.eprintf "\nremove_rolls: initial set size=%d" (RollSet.cardinal rs_set);
+  flush stderr;
+  let rs_after_set = remove_rolls_n_times 100 rs_set in
+  let result = (RollSet.cardinal rs_set) - (RollSet.cardinal rs_after_set) in
+  Printf.eprintf "\nremove_rolls: final result=%d" result;
+  flush stderr;
+  result
 
 let d04p2 lines =
-  remove_rolls lines
+  Printf.eprintf "\nd04p2: starting..." ;
+  flush stderr;
+  let result = remove_rolls lines in
+  Printf.eprintf "\nd04p2: finished with result=%d" result;
+  flush stderr;
+  result
