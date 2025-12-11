@@ -7,10 +7,10 @@ To continuously build/run:
 * dune exec aoc2025 -w
 *)
 
-open Aoc2025.Days
 open Aoc2025.Day01
 open Aoc2025.Day02
 open Aoc2025.Day03
+open Aoc2025.Day04
 
 let () = 
   Printf.eprintf "\nAnswer 1p1: %d" @@ d01p1 lines01;
