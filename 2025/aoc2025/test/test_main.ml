@@ -1,5 +1,6 @@
 open Aoc2025.Days
 open Aoc2025.Day01
+open Aoc2025.Day02
 open Aoc2025.Io_helpers
 
 let () = assert (tuple_val ("",1)=1);

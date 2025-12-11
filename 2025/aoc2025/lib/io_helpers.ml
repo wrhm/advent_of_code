@@ -26,3 +26,13 @@ let print_pair p1 p2 (x,y) = print_string "("; p1 x; print_string ","; p2 y; pri
 let print_pair_list p1 p2 lst =
   List.iter (fun (x,y) -> print_string "("; p1 x; print_string ","; p2 y; print_string ") ") lst;
   print_newline ()
+
+
+let list_sum = List.fold_left (+) 0
+
+let rec range a b =
+  if a>b then []
+  else a::(range (a+1) b)
+
+let cartesian_product list_a list_b =
+  List.map (fun a -> List.map (fun b -> (a,b)) list_b) list_a |> List.flatten
