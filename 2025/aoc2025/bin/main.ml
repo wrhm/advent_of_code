@@ -11,6 +11,7 @@ open Aoc2025.Day01
 open Aoc2025.Day02
 open Aoc2025.Day03
 open Aoc2025.Day04
+open Aoc2025.Day05
 
 let () = 
   Printf.eprintf "\nAnswer 1p1: %d" @@ d01p1 lines01;

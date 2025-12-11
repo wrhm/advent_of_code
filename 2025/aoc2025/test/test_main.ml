@@ -55,3 +55,34 @@ assert ('?' = char_from_str_list_or_oob 5 5 [] '?');
 let ex_lines04 = nonempty_lines_from_file (example_dir^"example04.txt") in
 assert (13 = d04p1 ex_lines04);
 assert (43=d04p2 ex_lines04);
+
+let num_in_range (low,hi) x = low <= x && x <= hi in
+
+let rec in_any_range rs v =
+  match rs with
+  | [] -> false
+  | (x::xs) -> num_in_range x v || in_any_range xs v in
+
+let nums_from_dashed_pair s =
+  let t = String.split_on_char '-' s in
+  (int_of_string @@ List.nth t 0, int_of_string @@ List.nth t 1) in
+
+assert ((1,2)=nums_from_dashed_pair "1-2");
+
+let ex_lines05 = nonempty_lines_from_file (example_dir^"example05.txt") in
+
+let d05p1 lines =
+  let dashed = List.filter (fun s -> String.contains s '-') lines in
+  let nums = List.map int_of_string @@ List.filter (fun s -> not @@ String.contains s '-') lines in
+  let ranges = List.map nums_from_dashed_pair dashed in
+  let valid_nums = List.filter (fun n -> in_any_range ranges n) nums in
+  List.length valid_nums in
+
+(* print_string_list ex_lines05;
+print_string "\n"; *)
+(* print_int_list valid_nums; *)
+assert (3 = d05p1 ex_lines05);
+(* print_string "\n";
+print_string_list dashed;
+print_string "\n";
+print_string_list nums; *)
