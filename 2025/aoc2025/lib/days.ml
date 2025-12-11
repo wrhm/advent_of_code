@@ -196,14 +196,33 @@ let w = width strs in
 if r<0 || r>=h || c<0 || c>=w then oob else char_from_str_list r c strs
 
 let neighbors r c strs nch =
-  List.length @@ List.filter
+  List.filter
     (fun (ri, ci) -> nch=char_from_str_list_or_oob ri ci strs 'X')
+    (List.map (fun (dr,dc) -> (r+dr,c+dc)) [(-1,-1);(-1,0);(-1,1);(0,-1);(0,1);(1,-1);(1,0);(1,1)])
+
+let neighbors_among_tuples r c tuples =
+  List.filter
+    (fun x -> List.mem x tuples)
     (List.map (fun (dr,dc) -> (r+dr,c+dc)) [(-1,-1);(-1,0);(-1,1);(0,-1);(0,1);(1,-1);(1,0);(1,1)])
 let rc_tuples strs = 
   let h = height strs in
   let w = width strs in
   cartesian_product (range 0 (h-1)) (range 0 (w-1))
-let d04p1 lines =
+
+(* let accessible_filter (r,c) = List.length @@ neighbors r c lines '@'<4 *)
+
+let accessible_rolls lines =
   let rolls = List.filter (fun (r,c) -> '@'=char_from_str_list r c lines) @@ rc_tuples lines in
-  let accessible_rolls = List.filter (fun (r,c) -> (neighbors r c lines '@')<4) rolls in
-  List.length accessible_rolls;
+  let ar = List.filter (fun (r,c) -> (List.length @@ neighbors r c lines '@')<4) rolls in
+  (rolls, ar)
+
+let accessible_rolls_among_tuples rolls =
+  (* let rolls = List.filter (fun (r,c) -> '@'=char_from_str_list r c lines) @@ rc_tuples lines in *)
+  let ar = List.filter (fun (r,c) -> (List.length @@ neighbors_among_tuples r c rolls )<4) rolls in
+  ar
+
+let d04p1 lines =
+  (* List.length @@ accessible_rolls lines *)
+  let (_,ar) = accessible_rolls lines in
+  (* print_pair_list print_int print_int ar; *)
+  List.length ar
