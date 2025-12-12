@@ -12,6 +12,7 @@ open Aoc2025.Day02
 open Aoc2025.Day03
 open Aoc2025.Day04
 open Aoc2025.Day05
+open Aoc2025.Day06
 
 let () = 
   Printf.eprintf "\nAnswer 1p1: %d" @@ d01p1 lines01;
@@ -24,4 +25,5 @@ let () =
   Printf.eprintf "\nAnswer 4p2: %d" @@ d04p2 lines04;
   Printf.eprintf "\nAnswer 5p1: %d" @@ d05p1 lines05;
   Printf.eprintf "\nAnswer 5p2: %d" @@ d05p2 lines05;
+  Printf.eprintf "\nAnswer 6p1: %d" @@ d06p1 lines06;
   Printf.eprintf "\n"
