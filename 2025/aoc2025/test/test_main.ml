@@ -74,62 +74,22 @@ assert (14 = d05p2 ex_lines05);
 let ex_lines06 = nonempty_lines_from_file (example_dir^"example06.txt") in
 assert (4277556 = d06p1 ex_lines06);
 
-
+assert (123 = parse_num "123   ");
+assert ((123, '*') = parse_num_and_op "123  *");
+assert (true = string_has_digit "123");
+assert (false = string_has_digit "abc");
 
 (* let calculations = List.map List.rev @@ transpose @@ List.map words ex_lines06 in
 print_list_of_lists print_string "\n" calculations *)
 
 (* let str_to_char_list *)
 
-let parse_num num_with_spaces =
-  let digits = List.filter (fun c -> c <> ' ') @@ str_to_char_list num_with_spaces in
-  int_of_string @@ String.of_seq @@ List.to_seq digits in
-
-assert (123 = parse_num "123   ");
-
-let parse_num_and_op s =
-  let cl = str_to_char_list s in
-  let op = List.nth (List.rev cl) 0 in
-  let digits = String.of_seq @@ List.to_seq @@ List.rev @@ List.tl @@ List.rev cl in
-  (* print_string ("digits: "^digits); *)
-  (parse_num digits,op) in
-
-assert ((123, '*') = parse_num_and_op "123  *");
-
-let rec any f vs =
-  match vs with
-  | [] -> false
-  | (x::xs) -> f x || any f xs in
-
-let string_has_char s c =
-  let chs = str_to_char_list s in
-  any (fun x -> x=c) chs in
-
-let string_has_digit s =
-  let chs = str_to_char_list s in
-  any (fun c -> '0' <= c && c <= '9') chs in
-
-assert (true = string_has_digit "123");
-assert (false = string_has_digit "abc");
-
-let rec solve_ceph2 strs total stack =
-  if List.length strs = 0 then total else
-  let s = List.nth strs 0 in
-  let ss = List.tl strs in
-  if not (string_has_digit s) then solve_ceph2 ss total stack else
-  if (string_has_char s '+' || string_has_char s '*') then
-    let (n,op) = parse_num_and_op s in
-    let res = if op='+' then list_sum (n::stack) else (List.fold_left ( * ) 1 (n::stack)) in
-    solve_ceph2 ss (total + res) [] else
-  let n = parse_num s in solve_ceph2 ss total (n::stack) in
-
-let charlists = List.map str_to_char_list ex_lines06 in
-let numstrs = List.rev @@ List.map (fun cl -> String.of_seq @@ List.to_seq cl) @@ transpose charlists in
-let p2 = solve_ceph2 numstrs 0 [] in
 (* print_list_of_lists print_char  " " charlists;
 print_string "\n=====\n";
 print_list_of_lists print_char  " " @@ transpose charlists; *)
-print_string "\n=====\n";
+(* print_string "\n=====\n";
 print_string_list numstrs;
 print_string "\n=====\np2=";
-print_int p2
+print_int p2 *)
+
+assert (3263827 = d06p2 ex_lines06);

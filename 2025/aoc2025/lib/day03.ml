@@ -20,7 +20,6 @@ let rec biggest_seen_after dig seen vs =
   | (_, true, vs) -> max_of_list 0 vs
   | (_, false, (x::xs)) -> biggest_seen_after dig (dig=x) xs
 
-let str_to_char_list s = List.of_seq @@ String.to_seq s
 let digit_char_to_int c = (int_of_char c) - 48
 let biggest_joltage s = 
   let int_digits = List.map digit_char_to_int @@ str_to_char_list s in
