@@ -30,7 +30,6 @@ let parse_num_and_op s =
   let cl = str_to_char_list s in
   let op = List.nth (List.rev cl) 0 in
   let digits = String.of_seq @@ List.to_seq @@ List.rev @@ List.tl @@ List.rev cl in
-  (* print_string ("digits: "^digits); *)
   (parse_num digits,op)
 
 let rec any f vs =

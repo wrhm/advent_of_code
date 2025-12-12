@@ -78,18 +78,4 @@ assert (123 = parse_num "123   ");
 assert ((123, '*') = parse_num_and_op "123  *");
 assert (true = string_has_digit "123");
 assert (false = string_has_digit "abc");
-
-(* let calculations = List.map List.rev @@ transpose @@ List.map words ex_lines06 in
-print_list_of_lists print_string "\n" calculations *)
-
-(* let str_to_char_list *)
-
-(* print_list_of_lists print_char  " " charlists;
-print_string "\n=====\n";
-print_list_of_lists print_char  " " @@ transpose charlists; *)
-(* print_string "\n=====\n";
-print_string_list numstrs;
-print_string "\n=====\np2=";
-print_int p2 *)
-
 assert (3263827 = d06p2 ex_lines06);
