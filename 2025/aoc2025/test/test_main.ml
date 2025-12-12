@@ -69,3 +69,26 @@ assert ([(1,4)] = coalesce_pairs [(1,3);(2,4)]);
 assert ([(1,5)] = coalesce_pairs [(1,5);(2,4)]);
 assert ([(3,5);(10,20)] = coalesce_pairs [(3,5);(10,14);(12,18);(16,20)]);
 assert (14 = d05p2 ex_lines05);
+
+let words s =
+  List.filter (fun w -> w <> "") @@ String.split_on_char ' ' s in
+
+let rec transpose m =
+  match m with
+  | [] :: _ -> []
+  | [] -> []
+  | rows ->
+    (List.map List.hd rows)::(transpose (List.map List.tl rows)) in
+
+let solve_ceph xs =
+  let op = List.hd xs in
+  let vs = List.map int_of_string @@ List.tl xs in
+  if op="+" then List.fold_left (+) 0 vs else
+    List.fold_left ( * ) 1 vs in
+
+let ex_lines06 = nonempty_lines_from_file (example_dir^"example06.txt") in
+(* print_list_of_lists print_string "\n" @@ List.map List.rev @@ transpose @@
+List.map words ex_lines06 *)
+let calculations = List.map List.rev @@ transpose @@ List.map words ex_lines06 in
+let result = list_sum @@ List.map solve_ceph calculations in
+print_int result
