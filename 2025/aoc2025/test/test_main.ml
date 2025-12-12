@@ -60,49 +60,12 @@ assert (43=d04p2 ex_lines04);
 let ex_lines05 = nonempty_lines_from_file (example_dir^"example05.txt") in
 
 assert ((1,2)=nums_from_dashed_pair "1-2");
-
-(* print_string_list ex_lines05;
-print_string "\n"; *)
-(* print_int_list valid_nums; *)
 assert (3 = d05p1 ex_lines05);
-(* print_string "\n";
-print_string_list dashed;
-print_string "\n";
-print_string_list nums; *)
-
-let compare_by_first (a,_) (b,_) = compare a b in
-
-let sort_int_pairs ps = List.sort compare_by_first ps in
-
-let rec coalesce_pairs ps =
-  match ps with
-  | [] -> []
-  | [x] -> [x]
-  | (a,b)::(c,d)::xs -> 
-     (* if b>=c then (a,max b d)::(coalesce_pairs xs) else *)
-     if b>=c then coalesce_pairs @@ (a,max b d)::xs else
-    (a,b)::(coalesce_pairs @@ (c,d)::xs) in
 
 assert ([] = coalesce_pairs []);
 assert ([(1,2)] = coalesce_pairs [(1,2)]);
 assert ([(1,2);(3,4)] = coalesce_pairs [(1,2);(3,4)]);
 assert ([(1,4)] = coalesce_pairs [(1,3);(2,4)]);
-(* print_pair_list print_int print_int @@ coalesce_pairs [(1,5);(2,4)]; *)
 assert ([(1,5)] = coalesce_pairs [(1,5);(2,4)]);
-(*  *)
 assert ([(3,5);(10,20)] = coalesce_pairs [(3,5);(10,14);(12,18);(16,20)]);
-
-(* let rec apply_n n f x = if n=0 then x else apply_n (n-1) f x in *)
-
-let range_size (a,b) = b-a+1 in
-
-let d05p2 lines =
-  let dashed = List.filter (fun s -> String.contains s '-') lines in
-  let ranges = List.map nums_from_dashed_pair dashed in
-  let srs = sort_int_pairs ranges in
-  (* let co = apply_n 5 coalesce_pairs srs in  *)
-  let co = coalesce_pairs srs in 
-  list_sum @@ List.map range_size co in
-
-(* print_pair_list print_int print_int @@ d05p2 ex_lines05 *)
 assert (14 = d05p2 ex_lines05);

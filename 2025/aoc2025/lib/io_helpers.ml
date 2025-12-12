@@ -36,3 +36,5 @@ let rec range a b =
 
 let cartesian_product list_a list_b =
   List.map (fun a -> List.map (fun b -> (a,b)) list_b) list_a |> List.flatten
+
+let rec apply_n n f x = if n=0 then x else apply_n (n-1) f x
